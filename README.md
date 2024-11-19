@@ -53,7 +53,8 @@ Si usas un editor diferente, asegúrate de que **EditorConfig** esté habilitado
 - **Evita commits con cambios masivos**. No combines demasiadas modificaciones en un solo commit.
   - Si estás agregando una nueva funcionalidad o corrigiendo un error, haz un commit por cada parte del cambio.
 - Asegúrate de usar **pull** para actualizar el proyecto antes de hacer un **push** para subir un cambio.
-  
+- **Siempre avisa cuando subas un commit**  
+
 ## Formato de los Docstrings
 
 El formato para los **docstrings** debe seguir la convención de **reStructuredText**.

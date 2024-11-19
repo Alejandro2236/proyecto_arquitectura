@@ -99,27 +99,27 @@ Si necesitas usar comentarios:
 ```bash
 simulated_computer/
 ├── main.py
-├── models/
+├── modelos/
 │   ├── __init__.py
 │   ├── cpu.py               # Contiene la clase CPU
 │   ├── ram.py               # Contiene la clase RAM
-│   └── system_bus.py        # Contiene la clase Bus de sistema
-├── controllers/
+│   └── bus_sistema.py        # Contiene la clase Bus de sistema
+├── controladores/
 │   ├── __init__.py
-│   └── simulation_controller.py  # Contiene la clase Controlador de simulación
-├── services/
+│   └── controlador_simulacion.py  # Contiene la clase Controlador de simulación
+├── servicios/
 │   ├── __init__.py
-│   └── instruction_executor.py  # Contiene la clase Ejecutador de instrucciones
-├── readers/
+│   └── ejecutor_instrucciones.py  # Contiene la clase Ejecutador de instrucciones
+├── lectores/
 │   ├── __init__.py
-│   ├── syntax_reader.py     # Contiene la clase Lector de sintaxis
-│   └── assembler_reader.py  # Contiene la clase Lector de ensamblador
-├── views/
+│   ├── lector_syntaxis.py     # Contiene la clase Lector de sintaxis
+│   └── lector_ensamblador.py  # Contiene la clase Lector de ensamblador
+├── vistas/
 │   ├── __init__.py
-│   └── cli_view.py          # Vista para la interfaz de línea de comandos
+│   └── vista_cliente.py          # Vista para la interfaz de línea de comandos
 └── tests/
     ├── __init__.py
     ├── test_cpu.py          # Pruebas unitarias para la clase CPU
-    ├── test_syntax_reader.py # Pruebas unitarias para SyntaxReader
-    └── test_instruction_executor.py  # Pruebas unitarias para InstructionExecutor
+    ├── test_lector_syntaxis.py # Pruebas unitarias para SyntaxReader
+    └── test_ejecutor_instrucciones.py  # Pruebas unitarias para InstructionExecutor
     

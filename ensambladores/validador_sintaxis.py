@@ -50,7 +50,7 @@ class ValidadorSintaxis:
             """
 
         if not instruccion:
-            raise ValueError("Para separar una instrucción en palabras no puede estar vacia")
+            raise ValueError("La instrucción no puede estar vacía.")
         return instruccion.split()
 
     def __validar_codop(self, codop: str, linea: int):

@@ -94,7 +94,30 @@ Si necesitas usar comentarios:
   innecesarias.
 - Si usas **comentarios de bloque**, asegúrate de que sean relevantes y ayuden a entender partes complejas del código.
 
- ## Ejemplo de Estructura de Archivos
+## Encapsulamiento
+
+- **Todos los atributos** de las clases serán **privados o protegidos**, usando **doble guión bajo** para 
+  **los privados** (__privado) y **un único guión bajo** para **los protegidos** (_protegido).
+- Para los atributos que necesiten ser accedidos de forma pública, se utilizará el decorador @property.
+    ```python
+    class Example:
+    def __init__(self):
+        self.__atributo = "valor"
+    
+    @property
+    def atributo(self):
+        return self.__atributo
+  
+- Al usar únicamente el decorador @property, el atributo será de tipo read-only. Para que sea totalmente público, se 
+ debe agregar el setter con @nombre_de_la_propiedad.setter.
+    ```python
+    @atributo.setter
+    def atributo(self, atributo):
+        self.__atributo = atributo
+  
+Con esto, el atributo también será editable públicamente.
+
+## Ejemplo de Estructura de Archivos
 
 ```bash
 simulated_computer/

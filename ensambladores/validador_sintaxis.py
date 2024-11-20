@@ -1,7 +1,7 @@
 class ValidadorSintaxis:
     def __init__(self, codops_data: dict[str, dict[str, int]]):
         self.__info_codops: list[dict] = list(codops_data.values())
-        self.__nombres_codops: set[str] = {info["name"] for info in self.__info_codops}
+        self.__nombres_codops: set[str] = {info["nombre"] for info in self.__info_codops}
 
     def validar_programa(self, instrucciones: list[str]) -> bool:
         """

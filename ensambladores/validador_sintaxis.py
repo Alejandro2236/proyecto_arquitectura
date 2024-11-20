@@ -41,6 +41,6 @@ class ValidadorSintaxis:
     def __obtener_cantidad_operandos_codop(self, codop: str) -> int:
         for codop_info in self.__codops_info:
             if codop_info["nombre"] == codop:
-                return codop_info["operandos"]
+                return codop_info["cantidad_operandos"]
 
         raise ValueError(f"Código de operación '{codop}' desconocido")

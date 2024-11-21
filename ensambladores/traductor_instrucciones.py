@@ -26,5 +26,14 @@ class TraductorInstrucciones:
                              que el programa ya ha sido validado).
         """
 
-        # TODO Lógica de traducción aquí...
-        pass
+        if not instrucciones:
+            raise ValueError("El programa debe tener al menos una instrucción.")
+
+        programa_traducido = []
+
+        for instruccion in instrucciones:
+            instruccion_traducida: str = self.__traducir_instruccion(instruccion)
+            programa_traducido.append(instruccion_traducida)
+
+    def __traducir_instruccion(self, instruccion: str) -> str:
+        raise NotImplementedError

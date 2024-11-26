@@ -22,3 +22,12 @@ class MyTestCase(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             validador.validar_programa(programa_correcto)
+
+    def test_validar_programa_etiquetas_correctas(self):
+        controlador_unidad_control = ControladorUnidadControl()
+        controlador_unidad_control.crear_unidad_control()
+        validador = ValidadorSintaxis(controlador_unidad_control)
+        programa_con_etiquetas = ["LOAD R1 2", "Etiqueta1:", "ADD R2 R1 2", "Etiqueta2:", "SUB R1 R2 1", "HLT"]
+
+        es_correcto = validador.validar_programa(programa_con_etiquetas)
+        self.assertTrue(es_correcto)

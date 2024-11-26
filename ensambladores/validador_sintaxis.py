@@ -7,7 +7,7 @@ class ValidadorSintaxis:
     def __init__(self, controlador_unidad_control: ControladorUnidadControl):
         self.__info_codops: list[dict] = controlador_unidad_control.obtener_cantidad_operandos_codops()
         self.__nombres_codops: set[str] = controlador_unidad_control.obtener_nombres_codop()
-        self.__etiquetas: Optional[list] = None
+        self.__etiquetas: list = []
 
     def validar_programa(self, instrucciones: list[str]) -> bool:
         """
@@ -66,12 +66,12 @@ class ValidadorSintaxis:
         if len(palabras_instruccion) != 1:
             return False
         etiqueta: str = palabras_instruccion[0]
+        if etiqueta[-1] != ":":
+            return False
         self.__validar_etiqueta(etiqueta, linea)
+        return True
 
     def __validar_etiqueta(self, etiqueta: str, linea: int):
-        if etiqueta[-1] != ":":
-            raise ValueError(f"La etiqueta {etiqueta} de la línea {linea} debe terminar con ':'")
-
         nombre_etiqueta: str = etiqueta[:-1]
         if nombre_etiqueta is None or nombre_etiqueta == "":
             raise ValueError(f"La etiqueta en la línea {linea} debe tener nombre.")

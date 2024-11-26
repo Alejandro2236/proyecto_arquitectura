@@ -7,6 +7,7 @@ class ControladorUnidadControl:
     def __init__(self):
         self.__unidad_control: Optional[UnidadControl] = None
         self.__dict_codops: Optional[dict] = None
+        self.__info_codops: Optional[list] = None
 
     def crear_unidad_control(self):
         self.__unidad_control: UnidadControl = UnidadControl()
@@ -17,11 +18,12 @@ class ControladorUnidadControl:
         nombres_codops: set = {info["nombre"] for info in self.__dict_codops}
         return nombres_codops
 
-    def obtener_info_codops(self) -> list[dict]:
+    def obtener_cantidad_operandos_codops(self) -> list[dict]:
         self.__validar_unidad_control()
-        self.__inicializar_dict_codops()
-        info_codops = list(self.__dict_codops.values())
-        return info_codops
+        self.__inicializar_info_codops()
+        lista_operandos = [{"nombre": info_codop["nombre"], "cantidad_operandos": info_codop["cantidad_operandos"]} for
+                           info_codop in self.__info_codops]
+        return lista_operandos
 
     def __validar_unidad_control(self):
         if self.__unidad_control is None:
@@ -30,3 +32,8 @@ class ControladorUnidadControl:
     def __inicializar_dict_codops(self) -> None:
         if self.__dict_codops is None:
             self.__dict_codops: dict = self.__unidad_control.codops
+
+    def __inicializar_info_codops(self) -> None:
+        self.__inicializar_dict_codops()
+        if self.__info_codops is None:
+            self.__info_codops: list = list(self.__dict_codops.values())

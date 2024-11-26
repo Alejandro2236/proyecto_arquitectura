@@ -3,7 +3,7 @@ from controladores.controlador_unidad_control import ControladorUnidadControl
 
 class ValidadorSintaxis:
     def __init__(self, controlador_unidad_control: ControladorUnidadControl):
-        self.__info_codops: list[dict] = controlador_unidad_control.obtener_info_codops()
+        self.__info_codops: list[dict] = controlador_unidad_control.obtener_cantidad_operandos_codops()
         self.__nombres_codops: set[str] = controlador_unidad_control.obtener_nombres_codop()
 
     def validar_programa(self, instrucciones: list[str]) -> bool:

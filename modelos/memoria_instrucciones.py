@@ -1,4 +1,11 @@
-class MemoriaInstrucciones:
+from modelos.memoria_base import MemoriaBase
+
+
+class MemoriaInstrucciones(MemoriaBase):
 
     def __init__(self, capacidad: int):
-        self.__capacidad = capacidad
+        super().__init__(capacidad)
+
+
+
+

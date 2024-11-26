@@ -14,8 +14,8 @@ class ControladorUnidadControl:
 
     def obtener_nombres_codop(self) -> set[str]:
         self.__validar_unidad_control()
-        self.__inicializar_dict_codops()
-        nombres_codops: set = {info["nombre"] for info in self.__dict_codops}
+        self.__inicializar_info_codops()
+        nombres_codops: set = set({info["nombre"] for info in self.__info_codops})
         return nombres_codops
 
     def obtener_cantidad_operandos_codops(self) -> list[dict]:

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from controladores.controlador_unidad_control import ControladorUnidadControl
 
 
@@ -5,6 +7,7 @@ class ValidadorSintaxis:
     def __init__(self, controlador_unidad_control: ControladorUnidadControl):
         self.__info_codops: list[dict] = controlador_unidad_control.obtener_cantidad_operandos_codops()
         self.__nombres_codops: set[str] = controlador_unidad_control.obtener_nombres_codop()
+        self.__etiquetas: Optional[list] = None
 
     def validar_programa(self, instrucciones: list[str]) -> bool:
         """
@@ -35,6 +38,9 @@ class ValidadorSintaxis:
         """
 
         palabras = self.__separar_palabras(instruccion)
+        if self.__es_etiqueta(palabras, linea):
+            self.__etiquetas.append(palabras[0][:-1])
+            return
         codop: str = palabras[0]
         operandos: list[str] = palabras[1:]
 
@@ -55,6 +61,23 @@ class ValidadorSintaxis:
         if not instruccion:
             raise ValueError("La instrucción no puede estar vacía.")
         return instruccion.split()
+
+    def __es_etiqueta(self, palabras_instruccion: list[str], linea: int) -> bool:
+        if len(palabras_instruccion) != 1:
+            return False
+        etiqueta: str = palabras_instruccion[0]
+        self.__validar_etiqueta(etiqueta, linea)
+
+    def __validar_etiqueta(self, etiqueta: str, linea: int):
+        if etiqueta[-1] != ":":
+            raise ValueError(f"La etiqueta {etiqueta} de la línea {linea} debe terminar con ':'")
+
+        nombre_etiqueta: str = etiqueta[:-1]
+        if nombre_etiqueta is None or nombre_etiqueta == "":
+            raise ValueError(f"La etiqueta en la línea {linea} debe tener nombre.")
+
+        if nombre_etiqueta in self.__etiquetas:
+            raise ValueError(f"La etiqueta {nombre_etiqueta} de la línea {linea} ya existe.")
 
     def __validar_codop(self, codop: str, linea: int):
         if codop not in self.__nombres_codops:

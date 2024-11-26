@@ -5,7 +5,7 @@ class MemoriaBase(ABC):
 
     def __init__(self, capacidad: int):
         self._capacidad = capacidad
-        self._direcciones: list = [0] * capacidad
+        self._direcciones: list = [0] * self._capacidad
         self._indicacion_control = None
         self._direccion_actual = None
 

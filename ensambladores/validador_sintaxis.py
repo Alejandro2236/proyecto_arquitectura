@@ -1,5 +1,3 @@
-from typing import Optional
-
 from controladores.controlador_unidad_control import ControladorUnidadControl
 
 
@@ -68,13 +66,19 @@ class ValidadorSintaxis:
         etiqueta: str = palabras_instruccion[0]
         if etiqueta[-1] != ":":
             return False
-        self.__validar_etiqueta(etiqueta, linea)
+        nombre_etiqueta: str = etiqueta[:-1]
+        self.__validar_etiqueta(nombre_etiqueta, linea)
         return True
 
-    def __validar_etiqueta(self, etiqueta: str, linea: int):
-        nombre_etiqueta: str = etiqueta[:-1]
+    def __validar_etiqueta(self, nombre_etiqueta: str, linea: int):
         if nombre_etiqueta is None or nombre_etiqueta == "":
             raise ValueError(f"La etiqueta en la línea {linea} debe tener nombre.")
+
+        if not nombre_etiqueta.isalnum():
+            raise ValueError(f"La etiqueta {nombre_etiqueta} de la línea {linea} debe ser alfanumérica.")
+
+        if not nombre_etiqueta[0].isalpha():
+            raise ValueError(f"La etiqueta {nombre_etiqueta} de la línea {linea} debe iniciar con una letra.")
 
         if nombre_etiqueta in self.__etiquetas:
             raise ValueError(f"La etiqueta {nombre_etiqueta} de la línea {linea} ya existe.")

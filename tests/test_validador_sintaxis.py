@@ -31,3 +31,23 @@ class MyTestCase(unittest.TestCase):
 
         es_correcto = validador.validar_programa(programa_con_etiquetas)
         self.assertTrue(es_correcto)
+
+    def test_validar_programa_etiqueta_no_alfanumerica(self):
+        controlador_unidad_control = ControladorUnidadControl()
+        controlador_unidad_control.crear_unidad_control()
+        validador = ValidadorSintaxis(controlador_unidad_control)
+        programa_etiquetas_no_alfanumericas = ["LOAD R1 2", "Etiqueta*:", "ADD R2 R1 2", "Etiqueta+:", "SUB R1 R2 1",
+                                               "HLT"]
+
+        with self.assertRaises(ValueError):
+            validador.validar_programa(programa_etiquetas_no_alfanumericas)
+
+    def test_validar_programa_etiqueta_empezando_numericamente(self):
+        controlador_unidad_control = ControladorUnidadControl()
+        controlador_unidad_control.crear_unidad_control()
+        validador = ValidadorSintaxis(controlador_unidad_control)
+        programa_etiquetas_no_alfanumericas = ["LOAD R1 2", "1Etiqueta:", "ADD R2 R1 2", "2Etiqueta:", "SUB R1 R2 1",
+                                               "HLT"]
+
+        with self.assertRaises(ValueError):
+            validador.validar_programa(programa_etiquetas_no_alfanumericas)

@@ -1,3 +1,6 @@
+from controladores.controlador_unidad_control import ControladorUnidadControl
+
+
 class TraductorInstrucciones:
     """
         Clase responsable de traducir un programa de lenguaje ensamblador a lenguaje de máquina.
@@ -11,8 +14,9 @@ class TraductorInstrucciones:
         este traductor.
         """
 
-    def __init__(self, codops: dict[str, dict[str, int]]):
-        self.__codops = codops
+    def __init__(self, controlador_unidad_control: ControladorUnidadControl):
+        self.__codops = controlador_unidad_control.obtener_codigos_binarios_codops()
+        self.__tipos_dato = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """

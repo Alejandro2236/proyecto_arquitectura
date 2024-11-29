@@ -8,6 +8,7 @@ class ControladorUnidadControl:
         self.__unidad_control: Optional[UnidadControl] = None
         self.__dict_codops: Optional[dict] = None
         self.__info_codops: Optional[list] = None
+        self.__tipos_dato: Optional[dict] = None
 
     def crear_unidad_control(self):
         self.__unidad_control: UnidadControl = UnidadControl()
@@ -37,3 +38,11 @@ class ControladorUnidadControl:
         self.__inicializar_dict_codops()
         if self.__info_codops is None:
             self.__info_codops: list = list(self.__dict_codops.values())
+
+    def obtener_mapa_tipos_dato(self) -> dict:
+        self.__inicializar_tipos_dato()
+        return self.__tipos_dato
+
+    def __inicializar_tipos_dato(self) -> None:
+        if self.__tipos_dato is None:
+            self.__tipos_dato: dict = self.__unidad_control.tipos_dato

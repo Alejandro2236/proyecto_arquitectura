@@ -20,7 +20,14 @@ class UnidadControl:
         "10001": {"nombre": "CMP", "cantidad_operandos": 2}
     }
 
+    __TIPOS_DATO: dict = {"000": "int", "001": "float", "010": "bool", "011": "char", "100": "string"}
+
     @property
     def codops(self):
         """Proporciona acceso de sólo lectura al mapa de codops."""
         return self.__CODOPS
+
+    @property
+    def tipos_dato(self):
+        """Proporciona acceso de sólo lectura al mapa de tipos de dato"""
+        return self.__TIPOS_DATO

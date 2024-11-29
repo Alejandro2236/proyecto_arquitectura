@@ -1,4 +1,5 @@
 from controladores.controlador_unidad_control import ControladorUnidadControl
+from utilidades import SeparadorPalabras
 
 
 class ValidadorSintaxis:
@@ -36,7 +37,7 @@ class ValidadorSintaxis:
         Verifica que una instrucción sea válida y registra etiquetas si corresponde.
         """
 
-        palabras = self.__separar_palabras(instruccion)
+        palabras: list[str] = SeparadorPalabras.separar_palabras(instruccion, None)
         if self.__es_etiqueta(palabras, linea):
             self.__etiquetas.append(palabras[0][:-1])
             return
@@ -46,17 +47,6 @@ class ValidadorSintaxis:
         self.__validar_codop(codop, linea)
         self.__validar_cantidad_operandos(codop, operandos, linea)
 
-    @staticmethod
-    def __separar_palabras(instruccion: str) -> list[str]:
-        """
-        Separa una instrucción en palabras.
-
-        :raises ValueError: Si la instrucción está vacía.
-        """
-
-        if not instruccion:
-            raise ValueError("La instrucción no puede estar vacía.")
-        return instruccion.split()
 
     def __es_etiqueta(self, palabras_instruccion: list[str], linea: int) -> bool:
         """

@@ -29,14 +29,14 @@ class ControladorUnidadControl:
             raise ValueError("La unidad de control no ha sido inicializada.")
 
     def __inicializar_dict_codops(self) -> None:
-        self.__validar_unidad_control()
         if self.__dict_codops is None:
+            self.__validar_unidad_control()
             self.__dict_codops: dict = self.__unidad_control.codops
 
     def __inicializar_info_codops(self) -> None:
-        self.__validar_unidad_control()
-        self.__inicializar_dict_codops()
         if self.__info_codops is None:
+            self.__validar_unidad_control()
+            self.__inicializar_dict_codops()
             self.__info_codops: list = list(self.__dict_codops.values())
 
     def obtener_codigos_binarios_codops(self) -> list[dict]:
@@ -50,6 +50,6 @@ class ControladorUnidadControl:
         return self.__tipos_dato
 
     def __inicializar_tipos_dato(self) -> None:
-        self.__validar_unidad_control()
         if self.__tipos_dato is None:
+            self.__validar_unidad_control()
             self.__tipos_dato: dict = self.__unidad_control.tipos_dato

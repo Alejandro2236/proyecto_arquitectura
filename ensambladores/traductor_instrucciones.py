@@ -1,4 +1,5 @@
 from controladores.controlador_unidad_control import ControladorUnidadControl
+from utilidades import SeparadorPalabras
 
 
 class TraductorInstrucciones:
@@ -36,8 +37,25 @@ class TraductorInstrucciones:
         programa_traducido = []
 
         for instruccion in instrucciones:
+            if instruccion.strip() == "":
+                continue
             instruccion_traducida: str = self.__traducir_instruccion(instruccion)
             programa_traducido.append(instruccion_traducida)
 
     def __traducir_instruccion(self, instruccion: str) -> str:
+        if instruccion is None:
+            raise ValueError("Debe pasar una instrucción para traducir.")
+        palabras: list[str] = SeparadorPalabras.separar_palabras(instruccion, None)
+        codop: str = palabras[0]
+        operandos: list[str] = palabras[1:]
+        codop_traducido: str = self.__traducir_codop(codop)
+        lista_operandos_traducidos: list[str] = self.__traducir_operandos(operandos)
+        operandos_traducidos_concatenados: str = "".join(lista_operandos_traducidos)
+        instruccion_traducida: str = codop_traducido + operandos_traducidos_concatenados
+        return instruccion_traducida
+
+    def __traducir_codop(self, codop: str) -> str:
+        raise NotImplementedError
+
+    def __traducir_operandos(self, operandos: list[str]) -> list[str]:
         raise NotImplementedError

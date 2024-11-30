@@ -38,6 +38,8 @@ class ValidadorSintaxis:
         """
 
         palabras: list[str] = SeparadorPalabras.separar_palabras(instruccion, None)
+        if not palabras:
+            return
         if self.__es_etiqueta(palabras, linea):
             self.__etiquetas.append(palabras[0][:-1])
             return
@@ -46,7 +48,6 @@ class ValidadorSintaxis:
 
         self.__validar_codop(codop, linea)
         self.__validar_cantidad_operandos(codop, operandos, linea)
-
 
     def __es_etiqueta(self, palabras_instruccion: list[str], linea: int) -> bool:
         """

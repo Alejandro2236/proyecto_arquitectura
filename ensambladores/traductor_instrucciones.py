@@ -16,8 +16,8 @@ class TraductorInstrucciones:
         """
 
     def __init__(self, controlador_unidad_control: ControladorUnidadControl):
-        self.__codops = controlador_unidad_control.obtener_codigos_binarios_codops()
-        self.__tipos_dato = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
+        self.__mapa_codops_binarios = controlador_unidad_control.obtener_codigos_binarios_codops()
+        self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -55,7 +55,12 @@ class TraductorInstrucciones:
         return instruccion_traducida
 
     def __traducir_codop(self, codop: str) -> str:
-        raise NotImplementedError
+        if not codop:
+            raise ValueError("No puede haber codops faltantes.")
+        for info_codop_binario in self.__mapa_codops_binarios:
+            if info_codop_binario["nombre"] == codop:
+                return info_codop_binario["codigo_binario"]
+        raise ValueError(f"Codop {codop} no encontrado en la lista de codops.")
 
     def __traducir_operandos(self, operandos: list[str]) -> list[str]:
         raise NotImplementedError

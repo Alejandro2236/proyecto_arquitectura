@@ -20,12 +20,31 @@ class UnidadControl:
         "10001": {"nombre": "CMP", "cantidad_operandos": 2}
     }
 
+    __FORMATO_INSTRUCCIONES: dict = {
+        "codop": 5,
+        "tipo_operando1": 3,
+        "direccionamiento_operando1": 2,
+        "valor_operando1": 9,
+        "tipo_operando2": 3,
+        "direccionamiento_operand2": 2,
+        "valor_operando2": 9,
+        "tipo_operando3": 3,
+        "direccionamiento_operando3": 2,
+        "valor_operando3": 9,
+        "reservado": 1
+    }
+
     __TIPOS_DATO: dict = {"000": "int", "001": "float", "010": "bool", "011": "char", "100": "string"}
 
     @property
     def codops(self):
         """Proporciona acceso de sólo lectura al mapa de codops."""
         return self.__CODOPS
+
+    @property
+    def formato_instrucciones(self):
+        """Proporciona acceso de sólo lectura al mapa de formato de instrucciones"""
+        return self.__FORMATO_INSTRUCCIONES
 
     @property
     def tipos_dato(self):

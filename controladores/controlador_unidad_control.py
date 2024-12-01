@@ -9,6 +9,7 @@ class ControladorUnidadControl:
         self.__dict_codops: Optional[dict] = None
         self.__info_codops: Optional[list] = None
         self.__tipos_dato: Optional[dict] = None
+        self.__formato_instrucciones: Optional[dict] = None
 
     def crear_unidad_control(self):
         self.__unidad_control: UnidadControl = UnidadControl()
@@ -53,3 +54,17 @@ class ControladorUnidadControl:
         if self.__tipos_dato is None:
             self.__validar_unidad_control()
             self.__tipos_dato: dict = self.__unidad_control.tipos_dato
+
+    def obtener_formato_instrucciones(self) -> dict:
+        self.__inicializar_formato_instrucciones()
+        return self.__formato_instrucciones
+
+    def __inicializar_formato_instrucciones(self) -> None:
+        if self.__formato_instrucciones is None:
+            self.__validar_unidad_control()
+            self.__formato_instrucciones: dict = self.__unidad_control.formato_instrucciones
+
+    def obtener_longitud_instrucciones(self) -> int:
+        self.__inicializar_formato_instrucciones()
+        longitud_instrucciones: int = sum(self.__formato_instrucciones.values())
+        return longitud_instrucciones

@@ -18,6 +18,8 @@ class TraductorInstrucciones:
     def __init__(self, controlador_unidad_control: ControladorUnidadControl):
         self.__mapa_codops_binarios = controlador_unidad_control.obtener_codigos_binarios_codops()
         self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
+        self.__formato_instrucciones = controlador_unidad_control.obtener_formato_instrucciones()
+        self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -63,4 +65,23 @@ class TraductorInstrucciones:
         raise ValueError(f"Codop {codop} no encontrado en la lista de codops.")
 
     def __traducir_operandos(self, operandos: list[str]) -> list[str]:
-        raise NotImplementedError
+        cantidad_operandos = len(operandos)
+        lista_operandos_traducidos: list = []
+
+        longitud_tipo_operando: int = self.__formato_instrucciones["tipo_operando1"]
+        longitud_direccionamiento: int = self.__formato_instrucciones["direccionamiento_operando1"]
+        longitud_valor_operando: int = self.__formato_instrucciones["valor_operando1"]
+
+        match cantidad_operandos:
+            case 0:
+                tipo_operando: str = "0" * longitud_tipo_operando
+                tipo_direccionamiento: str = "0" * longitud_direccionamiento
+                valor_operando: str = "0" * longitud_valor_operando
+                operando_completo: str = tipo_operando + tipo_direccionamiento + valor_operando
+                for _ in range(3):
+                    lista_operandos_traducidos.append(operando_completo)
+                return lista_operandos_traducidos
+            case 1:
+                operando1: str = operandos[0]
+                # TODO crear la lógica para 1 operando y crear los otros 2 en 0
+            # TODO crear la lógica del resto de casos

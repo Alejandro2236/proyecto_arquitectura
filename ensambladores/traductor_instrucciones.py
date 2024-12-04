@@ -67,63 +67,59 @@ class TraductorInstrucciones:
         raise ValueError(f"Codop {codop} no encontrado en la lista de codops.")
 
     def __traducir_operandos(self, operandos: list[str]) -> list[str]:
-        cantidad_operandos = len(operandos)
         lista_operandos_traducidos: list = []
 
         longitud_tipo_operando: int = self.__formato_instrucciones["tipo_operando1"]
         longitud_direccionamiento: int = self.__formato_instrucciones["direccionamiento_operando1"]
         longitud_valor_operando: int = self.__formato_instrucciones["valor_operando1"]
 
-        match cantidad_operandos:
-            case 0:
-                tipo_operando: str = "0" * longitud_tipo_operando
-                tipo_direccionamiento: str = "0" * longitud_direccionamiento
-                valor_operando: str = "0" * longitud_valor_operando
-                operando_completo: str = tipo_operando + tipo_direccionamiento + valor_operando
-                for _ in range(3):
-                    lista_operandos_traducidos.append(operando_completo)
-                return lista_operandos_traducidos
-            case 1:
-                operando1: str = operandos[0]
-                if self.__es_entero(operando1):
-                    for key, value in self.__mapa_tipos_dato_binarios.items():
-                        if value == "int":
-                            tipo_operando: str = key
-                            break
-                    try:
-                        operando_completo: str = transformador_binario.transformar_int_en_complemento_a_dos(
-                            operando1,
-                            longitud_tipo_operando
-                        )
-                        for key, value in self.__mapa_tipos_direccionamiento_binarios.items():
-                            if value == "inmediato":
-                                tipo_direccionamiento = key
-                    except:
-                        operando_completo = transformador_binario.transformar_int_en_complemento_a_dos(
-                            operando1,
-                            self.__longitud_instrucciones
-                        )
-                        for key, value in self.__mapa_tipos_direccionamiento_binarios.items():
-                            if value == "directo_datos":
-                                tipo_direccionamiento = key
+        for indice, operando in enumerate(operandos):
+            if indice == 0 and not self.__es_registro(operando) and not self.__es_direccion_memoria(
+                operando
+            ) and not self.__es_etiqueta(operando):
+                raise ValueError("El primer operando debe ser un registro, direccion de memoria o etiqueta")
 
+            if self.__es_int(operando):
+                tipo_operando = self.__obtener_codigo_tipo("int")
+                try:
+                    valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
+                        operando,
+                        longitud_valor_operando
+                    )
+                    tipo_direccionamiento = self.__obtener_codigo_direccionamiento("inmediato")
+                except:
+                    valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
+                        operando,
+                        self.__longitud_instrucciones
+                    )
+                    tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
+            elif self.__es_float(operando):
+                tipo_operando = self.__obtener_codigo_tipo("float")
 
-                if self.__es_flotante(operando1):
-                    ...
-                if self.__es_registro(operando1):
-                    ...
-                if self.__es_direccion_memoria(operando1):
-                    ...
-                # TODO crear la lógica para 1 operando y crear los otros 2 en 0
-            # TODO crear la lógica del resto de casos
+            else:
+                raise ValueError(f"Formato no reconocido para el operando {operando}")
 
-    def __es_entero(self, operando: str) -> bool:
+            operando_completo = tipo_direccionamiento + tipo_operando + valor_operando
+            lista_operandos_traducidos.append(operando_completo)
+
+        while len(lista_operandos_traducidos) < 3:
+            lista_operandos_traducidos.append(
+                self.__generar_operando_vacio(
+                    longitud_direccionamiento,
+                    longitud_tipo_operando,
+                    longitud_valor_operando
+                )
+            )
+
+        return lista_operandos_traducidos
+
+    def __es_int(self, operando: str) -> bool:
         if not operando.isdigit():
             if not (operando.startswith("-") and operando[1:].isdigit()):
                 return False
         return True
 
-    def __es_flotante(self, operando: str) -> bool:
+    def __es_float(self, operando: str) -> bool:
         try:
             float(operando)
             if "." not in operando:
@@ -133,15 +129,40 @@ class TraductorInstrucciones:
             return False
 
     def __es_registro(self, operando: str) -> bool:
+        print(operando)
         if not operando.startswith('R'):
             return False
         if not operando[1:].isdigit():
             return False
         return True
 
-    def __es_direccion_memoria(self, operando) -> bool:
+    def __es_direccion_memoria(self, operando: str) -> bool:
         if not operando.startswith("#"):
             return False
         if not operando[1:].isdigit():
             return False
         return True
+
+    def __es_etiqueta(self, operando: str) -> bool:
+        pass
+
+    def __obtener_codigo_tipo(self, tipo: str) -> str:
+        for key, value in self.__mapa_tipos_dato_binarios.items():
+            if value == tipo:
+                return key
+        raise ValueError(f"Tipo de operando no soportado: {tipo}")
+
+    def __obtener_codigo_direccionamiento(self, direccionamiento: str) -> str:
+        for key, value in self.__mapa_tipos_direccionamiento_binarios.items():
+            if value == direccionamiento:
+                return key
+        raise ValueError(f"Modo de direccionamiento no soportado: {direccionamiento}")
+
+    def __generar_operando_vacio(
+        self,
+        longitud_direccionamiento: int,
+        longitud_tipo_operando: int,
+        longitud_valor_operando: int
+    ) -> str:
+        operador_vacio = "0" * longitud_direccionamiento + "0" * longitud_tipo_operando + "0" * longitud_valor_operando
+        return operador_vacio

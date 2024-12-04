@@ -1,5 +1,5 @@
 from controladores.controlador_unidad_control import ControladorUnidadControl
-from utilidades import separador_palabras
+from utilidades import separador_palabras, transformador_binario
 
 
 class TraductorInstrucciones:
@@ -20,6 +20,7 @@ class TraductorInstrucciones:
         self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
         self.__formato_instrucciones = controlador_unidad_control.obtener_formato_instrucciones()
         self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
+        self.__mapa_tipos_direccionamiento_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_direccionamiento()
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -43,11 +44,12 @@ class TraductorInstrucciones:
                 continue
             instruccion_traducida: str = self.__traducir_instruccion(instruccion)
             programa_traducido.append(instruccion_traducida)
+        return programa_traducido
 
     def __traducir_instruccion(self, instruccion: str) -> str:
         if instruccion is None:
             raise ValueError("Debe pasar una instrucción para traducir.")
-        palabras: list[str] = SeparadorPalabras.separar_palabras(instruccion, None)
+        palabras: list[str] = separador_palabras.separar_palabras(instruccion, None)
         codop: str = palabras[0]
         operandos: list[str] = palabras[1:]
         codop_traducido: str = self.__traducir_codop(codop)
@@ -84,7 +86,28 @@ class TraductorInstrucciones:
             case 1:
                 operando1: str = operandos[0]
                 if self.__es_entero(operando1):
-                    ...
+                    for key, value in self.__mapa_tipos_dato_binarios.items():
+                        if value == "int":
+                            tipo_operando: str = key
+                            break
+                    try:
+                        operando_completo: str = transformador_binario.transformar_int_en_complemento_a_dos(
+                            operando1,
+                            longitud_tipo_operando
+                        )
+                        for key, value in self.__mapa_tipos_direccionamiento_binarios.items():
+                            if value == "inmediato":
+                                tipo_direccionamiento = key
+                    except:
+                        operando_completo = transformador_binario.transformar_int_en_complemento_a_dos(
+                            operando1,
+                            self.__longitud_instrucciones
+                        )
+                        for key, value in self.__mapa_tipos_direccionamiento_binarios.items():
+                            if value == "directo_datos":
+                                tipo_direccionamiento = key
+
+
                 if self.__es_flotante(operando1):
                     ...
                 if self.__es_registro(operando1):

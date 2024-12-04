@@ -36,6 +36,8 @@ class UnidadControl:
 
     __TIPOS_DATO: dict = {"000": "int", "001": "float", "010": "bool", "011": "char", "100": "string"}
 
+    __TIPOS_DIRECCIONAMIENTO: dict = {"00": "inmediato", "01": "registro", "10": "directo_datos", "11": "directo_instrucciones"}
+
     @property
     def codops(self):
         """Proporciona acceso de sólo lectura al mapa de codops."""
@@ -50,3 +52,9 @@ class UnidadControl:
     def tipos_dato(self):
         """Proporciona acceso de sólo lectura al mapa de tipos de dato"""
         return self.__TIPOS_DATO
+
+    @property
+    def tipos_direccionamiento(self):
+        """Proporciona acceso de sólo lectura al mapa de tipos de direccionamiento"""
+        return self.__TIPOS_DIRECCIONAMIENTO
+

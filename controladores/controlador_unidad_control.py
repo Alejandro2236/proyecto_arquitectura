@@ -10,6 +10,7 @@ class ControladorUnidadControl:
         self.__info_codops: Optional[list] = None
         self.__tipos_dato: Optional[dict] = None
         self.__formato_instrucciones: Optional[dict] = None
+        self.__tipos_direccionamiento: Optional[dict] = None
 
     def crear_unidad_control(self):
         self.__unidad_control: UnidadControl = UnidadControl()
@@ -68,3 +69,12 @@ class ControladorUnidadControl:
         self.__inicializar_formato_instrucciones()
         longitud_instrucciones: int = sum(self.__formato_instrucciones.values())
         return longitud_instrucciones
+
+    def obtener_codigos_binarios_tipos_direccionamiento(self) -> dict:
+        self.__inicializar_tipos_direccionamiento()
+        return self.__tipos_direccionamiento
+
+    def __inicializar_tipos_direccionamiento(self) -> None:
+        if self.__tipos_direccionamiento is None:
+            self.__validar_unidad_control()
+            self.__tipos_direccionamiento: dict = self.__unidad_control.tipos_direccionamiento

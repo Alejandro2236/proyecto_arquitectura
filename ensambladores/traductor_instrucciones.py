@@ -83,5 +83,42 @@ class TraductorInstrucciones:
                 return lista_operandos_traducidos
             case 1:
                 operando1: str = operandos[0]
+                if self.__es_entero(operando1):
+                    ...
+                if self.__es_flotante(operando1):
+                    ...
+                if self.__es_registro(operando1):
+                    ...
+                if self.__es_direccion_memoria(operando1):
+                    ...
                 # TODO crear la lógica para 1 operando y crear los otros 2 en 0
             # TODO crear la lógica del resto de casos
+
+    def __es_entero(self, operando: str) -> bool:
+        if not operando.isdigit():
+            if not (operando.startswith("-") and operando[1:].isdigit()):
+                return False
+        return True
+
+    def __es_flotante(self, operando: str) -> bool:
+        try:
+            float(operando)
+            if "." not in operando:
+                return False
+            return True
+        except ValueError:
+            return False
+
+    def __es_registro(self, operando: str) -> bool:
+        if not operando.startswith('R'):
+            return False
+        if not operando[1:].isdigit():
+            return False
+        return True
+
+    def __es_direccion_memoria(self, operando) -> bool:
+        if not operando.startswith("#"):
+            return False
+        if not operando[1:].isdigit():
+            return False
+        return True

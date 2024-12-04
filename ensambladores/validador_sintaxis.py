@@ -1,5 +1,5 @@
 from controladores.controlador_unidad_control import ControladorUnidadControl
-from utilidades import SeparadorPalabras
+from utilidades import separador_palabras
 
 
 class ValidadorSintaxis:

@@ -34,9 +34,12 @@ class UnidadControl:
         "reservado": 1
     }
 
+    __FORMATO_FLOATS: dict = {"signo": 1, "exponente": 11, "mantisa": 36}
+
     __TIPOS_DATO: dict = {"000": "int", "001": "float", "010": "bool", "011": "char", "100": "string"}
 
     __TIPOS_DIRECCIONAMIENTO: dict = {"00": "inmediato", "01": "registro", "10": "directo_datos", "11": "directo_instrucciones"}
+
 
     @property
     def codops(self):
@@ -47,6 +50,11 @@ class UnidadControl:
     def formato_instrucciones(self):
         """Proporciona acceso de sólo lectura al mapa de formato de instrucciones"""
         return self.__FORMATO_INSTRUCCIONES
+
+    @property
+    def formato_floats(self):
+        """Proporciona acceso de sólo lectura al mapa de formato de floats"""
+        return self.__FORMATO_FLOATS
 
     @property
     def tipos_dato(self):

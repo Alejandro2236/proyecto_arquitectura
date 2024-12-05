@@ -1,3 +1,6 @@
+import math
+
+
 def transformar_int_en_complemento_a_dos(numero: str, bits: int) -> str:
     """
     Convierte un string que representa un número entero en su
@@ -15,18 +18,74 @@ def transformar_int_en_complemento_a_dos(numero: str, bits: int) -> str:
     """
 
     if bits <= 0:
-        raise ValueError("The number of bits must be a positive integer.")
+        raise ValueError("El número de bits debe ser un entero positivo.")
 
     try:
         numero_entero = int(numero)
     except ValueError:
-        raise ValueError(f"'{numero}' is not a valid integer string.")
+        raise ValueError(f"'{numero}' no es un string entero válido.")
 
     valor_minimo = -(1 << (bits - 1))
     valor_maximo = (1 << (bits - 1)) - 1
 
     if not (valor_minimo <= numero_entero <= valor_maximo):
-        raise ValueError(f"Number {numero_entero} cannot be represented in {bits} bits.")
+        raise ValueError(f"El número {numero_entero} no puede ser representado con {bits} bits.")
 
     mascara = (1 << bits) - 1
     return "{:0{}b}".format(numero_entero & mascara, bits)
+
+
+def transformar_float_en_formato_binario(numero: str, total_bits: int, cantidad_bits_exponente: int) -> str:
+    if total_bits <= 0:
+        raise ValueError("El número de bits debe ser un entero positivo.")
+
+    if cantidad_bits_exponente <= 0:
+        raise ValueError("El número de bits para exponente debe ser un entero positivo")
+
+    try:
+        numero_flotante: float = float(numero)
+    except ValueError:
+        raise ValueError(f"'{numero}' no es un string flotante válido.")
+
+    if math.isclose(numero_flotante, 0.0, abs_tol=1e-09):
+        return __obtener_bit_signo(numero_flotante) + "0" * (total_bits - 1)
+
+    cantidad_bits_mantisa: int = total_bits - cantidad_bits_exponente - 1
+
+    bit_signo: str = __obtener_bit_signo(numero_flotante)
+    bits_exponente: str = __obtener_bits_exponente(numero_flotante, cantidad_bits_exponente)
+    bits_mantisa: str = __obtener_bits_mantisa(numero_flotante, cantidad_bits_mantisa)
+
+    return bit_signo + bits_exponente + bits_mantisa
+
+
+def __obtener_bit_signo(numero_flotante: float) -> str:
+    return "0" if numero_flotante >= 0 else "1"
+
+
+def __obtener_bits_exponente(numero_flotante: float, cantidad_bits_exponente: int) -> str:
+    exponente: int = math.floor(math.log2(abs(numero_flotante)))
+    sesgo: int = (1 << (cantidad_bits_exponente - 1)) - 1
+    exponente_corregido: int = exponente + sesgo
+
+    if not (0 <= exponente_corregido < (1 << cantidad_bits_exponente)):
+        raise ValueError(
+            f"Exponente {exponente_corregido} fuera de rango para el formato {cantidad_bits_exponente} bits"
+        )
+
+    return f"{exponente_corregido:0{cantidad_bits_exponente}b}"
+
+
+def __obtener_bits_mantisa(numero_flotante: float, cantidad_bits_mantisa: int) -> str:
+    parte_fraccionaria: float = abs(numero_flotante) - 1
+    bits_mantisa: str = ""
+
+    for _ in range(cantidad_bits_mantisa):
+        parte_fraccionaria *= 2
+        if parte_fraccionaria >= 1:
+            bits_mantisa += "1"
+            parte_fraccionaria -= 1
+        else:
+            bits_mantisa += "0"
+
+    return bits_mantisa[:cantidad_bits_mantisa]

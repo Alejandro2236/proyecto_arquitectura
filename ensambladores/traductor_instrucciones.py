@@ -19,6 +19,7 @@ class TraductorInstrucciones:
         self.__mapa_codops_binarios = controlador_unidad_control.obtener_codigos_binarios_codops()
         self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
         self.__formato_instrucciones = controlador_unidad_control.obtener_formato_instrucciones()
+        self.__formato_floats = controlador_unidad_control.obtener_formato_float()
         self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
         self.__mapa_tipos_direccionamiento_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_direccionamiento()
 
@@ -95,7 +96,12 @@ class TraductorInstrucciones:
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             elif self.__es_float(operando):
                 tipo_operando = self.__obtener_codigo_tipo("float")
-
+                valor_operando = transformador_binario.transformar_float_en_formato_binario(
+                    operando,
+                    self.__longitud_instrucciones,
+                    self.__formato_floats["exponente"]
+                )
+                tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             else:
                 raise ValueError(f"Formato no reconocido para el operando {operando}")
 

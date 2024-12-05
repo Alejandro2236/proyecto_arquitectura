@@ -10,6 +10,7 @@ class ControladorUnidadControl:
         self.__info_codops: Optional[list] = None
         self.__tipos_dato: Optional[dict] = None
         self.__formato_instrucciones: Optional[dict] = None
+        self.__formato_floats: Optional[dict] = None
         self.__tipos_direccionamiento: Optional[dict] = None
 
     def crear_unidad_control(self):
@@ -78,3 +79,12 @@ class ControladorUnidadControl:
         if self.__tipos_direccionamiento is None:
             self.__validar_unidad_control()
             self.__tipos_direccionamiento: dict = self.__unidad_control.tipos_direccionamiento
+
+    def obtener_formato_float(self) -> dict:
+        self.__inicializar_formato_floats()
+        return self.__formato_floats
+
+    def __inicializar_formato_floats(self) -> None:
+        if self.__formato_floats is None:
+            self.__validar_unidad_control()
+            self.__formato_floats: dict = self.__unidad_control.formato_floats

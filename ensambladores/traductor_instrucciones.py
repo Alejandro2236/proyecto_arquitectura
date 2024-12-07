@@ -88,7 +88,7 @@ class TraductorInstrucciones:
                         longitud_valor_operando
                     )
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("inmediato")
-                except:
+                except ValueError:
                     valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
                         operando,
                         self.__longitud_instrucciones

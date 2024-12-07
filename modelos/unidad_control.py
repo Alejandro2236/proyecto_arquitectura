@@ -22,14 +22,14 @@ class UnidadControl:
 
     __FORMATO_INSTRUCCIONES: dict = {
         "codop": 5,
-        "tipo_operando1": 2,
         "direccionamiento_operando1": 2,
+        "tipo_operando1": 2,
         "valor_operando1": 10,
+        "direccionamiento_operando2": 2,
         "tipo_operando2": 2,
-        "direccionamiento_operand2": 2,
         "valor_operando2": 10,
-        "tipo_operando3": 2,
         "direccionamiento_operando3": 2,
+        "tipo_operando3": 2,
         "valor_operando3": 10,
         "reservado": 1
     }

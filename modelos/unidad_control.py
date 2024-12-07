@@ -22,24 +22,28 @@ class UnidadControl:
 
     __FORMATO_INSTRUCCIONES: dict = {
         "codop": 5,
-        "tipo_operando1": 3,
+        "tipo_operando1": 2,
         "direccionamiento_operando1": 2,
-        "valor_operando1": 9,
-        "tipo_operando2": 3,
+        "valor_operando1": 10,
+        "tipo_operando2": 2,
         "direccionamiento_operand2": 2,
-        "valor_operando2": 9,
-        "tipo_operando3": 3,
+        "valor_operando2": 10,
+        "tipo_operando3": 2,
         "direccionamiento_operando3": 2,
-        "valor_operando3": 9,
+        "valor_operando3": 10,
         "reservado": 1
     }
 
     __FORMATO_FLOATS: dict = {"signo": 1, "exponente": 11, "mantisa": 36}
 
-    __TIPOS_DATO: dict = {"000": "int", "001": "float", "010": "bool", "011": "char", "100": "string"}
+    __TIPOS_DATO: dict = {"00": "int", "01": "float", "10": "bool", "11": "desconocido"}
 
-    __TIPOS_DIRECCIONAMIENTO: dict = {"00": "inmediato", "01": "registro", "10": "directo_datos", "11": "directo_instrucciones"}
-
+    __TIPOS_DIRECCIONAMIENTO: dict = {
+        "00": "inmediato",
+        "01": "registro",
+        "10": "directo_datos",
+        "11": "directo_instrucciones"
+    }
 
     @property
     def codops(self):
@@ -65,4 +69,3 @@ class UnidadControl:
     def tipos_direccionamiento(self):
         """Proporciona acceso de sólo lectura al mapa de tipos de direccionamiento"""
         return self.__TIPOS_DIRECCIONAMIENTO
-

@@ -22,6 +22,7 @@ class TraductorInstrucciones:
         self.__formato_floats = controlador_unidad_control.obtener_formato_float()
         self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
         self.__mapa_tipos_direccionamiento_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_direccionamiento()
+        self.__diccionario_registros: dict = {}
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -102,6 +103,13 @@ class TraductorInstrucciones:
                     self.__formato_floats["exponente"]
                 )
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
+            elif self.__es_registro(operando):
+                tipo_operando = self.__obtener_codigo_tipo("desconocido")
+                valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
+                    operando[1:],
+                    longitud_valor_operando
+                )
+                tipo_direccionamiento = self.__obtener_codigo_direccionamiento("registro")
             else:
                 raise ValueError(f"Formato no reconocido para el operando {operando}")
 

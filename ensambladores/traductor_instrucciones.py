@@ -1,3 +1,4 @@
+from controladores.controlador_memoria_datos import ControladorMemoriaDatos
 from controladores.controlador_unidad_control import ControladorUnidadControl
 from utilidades import separador_palabras, transformador_binario
 
@@ -15,14 +16,18 @@ class TraductorInstrucciones:
         este traductor.
         """
 
-    def __init__(self, controlador_unidad_control: ControladorUnidadControl):
+    def __init__(
+        self,
+        controlador_unidad_control: ControladorUnidadControl,
+        controlador_memoria_datos: ControladorMemoriaDatos
+    ):
         self.__mapa_codops_binarios = controlador_unidad_control.obtener_codigos_binarios_codops()
         self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
         self.__formato_instrucciones = controlador_unidad_control.obtener_formato_instrucciones()
         self.__formato_floats = controlador_unidad_control.obtener_formato_float()
         self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
         self.__mapa_tipos_direccionamiento_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_direccionamiento()
-        self.__diccionario_registros: dict = {}
+        self.__controlador_memoria_datos = controlador_memoria_datos
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -90,9 +95,13 @@ class TraductorInstrucciones:
                     )
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("inmediato")
                 except ValueError:
-                    valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
+                    valor_a_almacenar = transformador_binario.transformar_int_en_complemento_a_dos(
                         operando,
                         self.__longitud_instrucciones
+                    )
+                    valor_operando = self.__almacenar_y_obtener_posicion_binaria(
+                        valor_a_almacenar,
+                        longitud_valor_operando
                     )
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             elif self.__es_float(operando):
@@ -102,7 +111,7 @@ class TraductorInstrucciones:
                     self.__longitud_instrucciones,
                     self.__formato_floats["exponente"]
                 )
-                valor_operando = self.__almacenar_y_obtener_posicion(valor_a_almacenar)
+                valor_operando = self.__almacenar_y_obtener_posicion_binaria(valor_a_almacenar, longitud_valor_operando)
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             elif self.__es_registro(operando):
                 tipo_operando = self.__obtener_codigo_tipo("desconocido")
@@ -144,7 +153,6 @@ class TraductorInstrucciones:
             return False
 
     def __es_registro(self, operando: str) -> bool:
-        print(operando)
         if not operando.startswith('R'):
             return False
         if not operando[1:].isdigit():
@@ -173,16 +181,16 @@ class TraductorInstrucciones:
                 return key
         raise ValueError(f"Modo de direccionamiento no soportado: {direccionamiento}")
 
-    def __almacenar_y_obtener_posicion(self, valor_a_almacenar: str) -> str:
+    def __almacenar_y_obtener_posicion_binaria(self, valor_a_almacenar: str, longitud_operando) -> str:
         posicion = self.__calcular_posicion_para_almacenar_dato()
         self.__almacenar_en_posicion(valor_a_almacenar, posicion)
-        return posicion
+        return transformador_binario.transformar_int_en_complemento_a_dos(str(posicion), longitud_operando)
 
-    def __calcular_posicion_para_almacenar_dato(self) -> str:
-        pass
+    def __calcular_posicion_para_almacenar_dato(self) -> int:
+        return self.__controlador_memoria_datos.obtener_siguiente_posicion_libre()
 
-    def __almacenar_en_posicion(self, valor_a_almacenar: str, posicion: str) -> None:
-        pass
+    def __almacenar_en_posicion(self, valor_a_almacenar: str, posicion: int) -> None:
+        self.__controlador_memoria_datos.almacenar_dato_en_posicion(valor_a_almacenar, posicion)
 
     def __generar_operando_vacio(
         self,

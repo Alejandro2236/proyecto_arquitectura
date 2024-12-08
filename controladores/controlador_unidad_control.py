@@ -14,6 +14,8 @@ class ControladorUnidadControl:
         self.__tipos_direccionamiento: Optional[dict] = None
 
     def crear_unidad_control(self):
+        if self.__unidad_control is not None:
+            raise ValueError("La unidad de control ya existe,")
         self.__unidad_control: UnidadControl = UnidadControl()
 
     def obtener_nombres_codop(self) -> set[str]:

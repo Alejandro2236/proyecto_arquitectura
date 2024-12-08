@@ -10,6 +10,11 @@ class MemoriaBase(ABC):
         self._direccion_actual = None
 
     @property
+    def capacidad(self):
+        """Proporciona acceso de sólo lectura a la capacidad"""
+        return self._capacidad
+
+    @property
     def indicacion_control(self):
         raise AttributeError("La señal de control no es accesible desde el exterior.")
 
@@ -28,3 +33,13 @@ class MemoriaBase(ABC):
         if direccion_actual not in range(self._capacidad):
             raise ValueError(f"La dirección actual debe estar entre 0 y {self._capacidad - 1}")
         self._direccion_actual: int = direccion_actual
+
+    @property
+    def siguiente_posicion_libre(self):
+        """Proporciona acceso de sólo lectura a la siguiente posición libre"""
+        for posicion, direccion in enumerate(self._direcciones):
+            if direccion == 0:
+                return posicion
+
+    def almacenar_dato_en_posicion(self, dato: str, posicion: int):
+        self._direcciones[posicion] = dato

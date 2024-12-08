@@ -1,7 +1,7 @@
 class Pc:
 
     def __init__(self):
-        self._registro: str = ""
+        self.__registro: str = ""
 
     @property
     def registro(self):
@@ -9,6 +9,6 @@ class Pc:
 
     @registro.setter
     def registro(self,registro: str):
-        self._registro = registro
+        self.__registro = registro
 
         

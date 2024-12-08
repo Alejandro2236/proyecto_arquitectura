@@ -1,4 +1,4 @@
 class Ir:
 
     def __init__(self):
-        self._registro: str = ""
+        self.__registro: str = ""

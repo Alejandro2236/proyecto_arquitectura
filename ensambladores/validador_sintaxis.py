@@ -37,7 +37,7 @@ class ValidadorSintaxis:
         Verifica que una instrucción sea válida y registra etiquetas si corresponde.
         """
 
-        palabras: list[str] = SeparadorPalabras.separar_palabras(instruccion, None)
+        palabras: list[str] = separador_palabras.separar_palabras(instruccion, None)
         if not palabras:
             return
         if self.__es_etiqueta(palabras, linea):

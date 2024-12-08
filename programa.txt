@@ -1,0 +1,3 @@
+MOVE R1, 5
+ADD R2, R1, R3
+JMP 0x10

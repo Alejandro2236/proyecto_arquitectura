@@ -122,6 +122,13 @@ class TraductorInstrucciones:
                     longitud_valor_operando
                 )
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("registro")
+            elif verificador_tipos.es_direccion_memoria(operando):
+                tipo_operando = self.__obtener_codigo_tipo("desconocido")
+                valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
+                    operando[1:],
+                    longitud_valor_operando
+                )
+                tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             else:
                 raise ValueError(f"Formato no reconocido para el operando {operando}")
 

@@ -1,6 +1,6 @@
 from controladores.controlador_memoria_datos import ControladorMemoriaDatos
 from controladores.controlador_unidad_control import ControladorUnidadControl
-from utilidades import separador_palabras, transformador_binario
+from utilidades import separador_palabras, transformador_binario, verificador_tipos
 
 
 class TraductorInstrucciones:
@@ -81,12 +81,14 @@ class TraductorInstrucciones:
         longitud_valor_operando: int = self.__formato_instrucciones["valor_operando1"]
 
         for indice, operando in enumerate(operandos):
-            if indice == 0 and not self.__es_registro(operando) and not self.__es_direccion_memoria(
+            if indice == 0 and not verificador_tipos.es_registro(
                 operando
-            ) and not self.__es_etiqueta(operando):
+            ) and not verificador_tipos.es_direccion_memoria(operando) and not verificador_tipos.es_etiqueta(
+                operando
+            ):
                 raise ValueError("El primer operando debe ser un registro, direccion de memoria o etiqueta")
 
-            if self.__es_int(operando):
+            if verificador_tipos.es_int(operando):
                 tipo_operando = self.__obtener_codigo_tipo("int")
                 try:
                     valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
@@ -104,7 +106,7 @@ class TraductorInstrucciones:
                         longitud_valor_operando
                     )
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
-            elif self.__es_float(operando):
+            elif verificador_tipos.es_float(operando):
                 tipo_operando = self.__obtener_codigo_tipo("float")
                 valor_a_almacenar = transformador_binario.transformar_float_en_formato_binario(
                     operando,
@@ -113,7 +115,7 @@ class TraductorInstrucciones:
                 )
                 valor_operando = self.__almacenar_y_obtener_posicion_binaria(valor_a_almacenar, longitud_valor_operando)
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
-            elif self.__es_registro(operando):
+            elif verificador_tipos.es_registro(operando):
                 tipo_operando = self.__obtener_codigo_tipo("desconocido")
                 valor_operando = transformador_binario.transformar_int_en_complemento_a_dos(
                     operando[1:],
@@ -136,38 +138,6 @@ class TraductorInstrucciones:
             )
 
         return lista_operandos_traducidos
-
-    def __es_int(self, operando: str) -> bool:
-        if not operando.isdigit():
-            if not (operando.startswith("-") and operando[1:].isdigit()):
-                return False
-        return True
-
-    def __es_float(self, operando: str) -> bool:
-        try:
-            float(operando)
-            if "." not in operando:
-                return False
-            return True
-        except ValueError:
-            return False
-
-    def __es_registro(self, operando: str) -> bool:
-        if not operando.startswith('R'):
-            return False
-        if not operando[1:].isdigit():
-            return False
-        return True
-
-    def __es_direccion_memoria(self, operando: str) -> bool:
-        if not operando.startswith("#"):
-            return False
-        if not operando[1:].isdigit():
-            return False
-        return True
-
-    def __es_etiqueta(self, operando: str) -> bool:
-        pass
 
     def __obtener_codigo_tipo(self, tipo: str) -> str:
         for key, value in self.__mapa_tipos_dato_binarios.items():

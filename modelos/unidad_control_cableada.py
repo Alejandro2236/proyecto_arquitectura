@@ -39,6 +39,14 @@ class UnidadControlCableada:
         valor = getattr(clase_origen, atributo_origen)
         setattr(clase_destino, atributo_destino, valor)
 
+    def enviar_dato(self, valor: str, nombre_clase_destino: str, atributo_destino: str):
+        clase_destino = self.__componentes[nombre_clase_destino]
+        if not clase_destino:
+            raise ValueError(f"La clase de destino {nombre_clase_destino} no fue encontrada")
+        if not hasattr(clase_destino, atributo_destino):
+            raise AttributeError(f"{nombre_clase_destino} no tiene atributo {atributo_destino}")
+        setattr(clase_destino, atributo_destino, valor)
+
     def enviar_direccion_a_mar(self, direccion: str):
         mar: Mar = self.__componentes["mar"]
         mar.registro = direccion

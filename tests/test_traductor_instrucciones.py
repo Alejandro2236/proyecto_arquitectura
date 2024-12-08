@@ -20,6 +20,8 @@ class TestCaseTraductorInstrucciones(unittest.TestCase):
             controlador_memoria_instrucciones
         )
 
-        programa_traducido = traductor_instrucciones.traducir_programa(["inicio:", "ADD R2 1 3", "MUL #2 R2 5.0", "final:", "HLT"])
+        programa_traducido = traductor_instrucciones.traducir_programa(
+            ["inicio:", "ADD R2 1 3", "JMP inicio", "MUL #2 R2 5.0", "final:", "HLT"]
+        )
         print("programa traducido:\n", programa_traducido)
         self.assertIsNotNone(programa_traducido)

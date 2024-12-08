@@ -40,3 +40,10 @@ def es_etiqueta(operando: str) -> bool:
         return False
     return True
 
+def es_etiqueta_operando(operando: str) -> bool:
+    if len(operando.split()) != 1:
+        return False
+    if not operando.isalpha():
+        return False
+    return True
+

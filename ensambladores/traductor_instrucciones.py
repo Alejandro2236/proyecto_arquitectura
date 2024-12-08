@@ -106,7 +106,7 @@ class TraductorInstrucciones:
         for indice, operando in enumerate(operandos):
             if indice == 0 and not verificador_tipos.es_registro(
                 operando
-            ) and not verificador_tipos.es_direccion_memoria(operando) and not verificador_tipos.es_etiqueta(
+            ) and not verificador_tipos.es_direccion_memoria(operando) and not verificador_tipos.es_etiqueta_operando(
                 operando
             ):
                 raise ValueError("El primer operando debe ser un registro, direccion de memoria o etiqueta")
@@ -151,6 +151,12 @@ class TraductorInstrucciones:
                     operando[1:],
                     longitud_valor_operando
                 )
+                tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
+            elif verificador_tipos.es_etiqueta_operando(operando):
+                tipo_operando = self.__obtener_codigo_tipo("desconocido")
+                if operando not in self.__etiquetas_actuales:
+                    raise ValueError("La etiqueta tiene que haberse declarado antes.")
+                valor_operando = self.__etiquetas_actuales[operando]
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             else:
                 raise ValueError(f"Formato no reconocido para el operando {operando}")

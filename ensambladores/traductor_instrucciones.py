@@ -97,11 +97,12 @@ class TraductorInstrucciones:
                     tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             elif self.__es_float(operando):
                 tipo_operando = self.__obtener_codigo_tipo("float")
-                valor_operando = transformador_binario.transformar_float_en_formato_binario(
+                valor_a_almacenar = transformador_binario.transformar_float_en_formato_binario(
                     operando,
                     self.__longitud_instrucciones,
                     self.__formato_floats["exponente"]
                 )
+                valor_operando = self.__almacenar_y_obtener_posicion(valor_a_almacenar)
                 tipo_direccionamiento = self.__obtener_codigo_direccionamiento("directo_datos")
             elif self.__es_registro(operando):
                 tipo_operando = self.__obtener_codigo_tipo("desconocido")
@@ -171,6 +172,17 @@ class TraductorInstrucciones:
             if value == direccionamiento:
                 return key
         raise ValueError(f"Modo de direccionamiento no soportado: {direccionamiento}")
+
+    def __almacenar_y_obtener_posicion(self, valor_a_almacenar: str) -> str:
+        posicion = self.__calcular_posicion_para_almacenar_dato()
+        self.__almacenar_en_posicion(valor_a_almacenar, posicion)
+        return posicion
+
+    def __calcular_posicion_para_almacenar_dato(self) -> str:
+        pass
+
+    def __almacenar_en_posicion(self, valor_a_almacenar: str, posicion: str) -> None:
+        pass
 
     def __generar_operando_vacio(
         self,

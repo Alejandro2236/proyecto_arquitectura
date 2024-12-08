@@ -41,5 +41,14 @@ class MemoriaBase(ABC):
             if direccion == 0:
                 return posicion
 
+    @property
+    def posiciones_libres(self):
+        """Proporciona acceso de sólo lectura a las posiciones libres"""
+        posiciones_libres = []
+        for posicion, direccion in enumerate(self._direcciones):
+            if direccion == 0:
+                posiciones_libres.append(posicion)
+        return posiciones_libres
+
     def almacenar_dato_en_posicion(self, dato: str, posicion: int):
         self._direcciones[posicion] = dato

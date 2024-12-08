@@ -32,4 +32,11 @@ def es_direccion_memoria(operando: str) -> bool:
 
 
 def es_etiqueta(operando: str) -> bool:
-    pass
+    if len(operando.split()) != 1:
+        return False
+    if not operando.endswith(":"):
+        return False
+    if not operando[:-1].isalpha():
+        return False
+    return True
+

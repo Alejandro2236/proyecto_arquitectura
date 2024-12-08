@@ -1,4 +1,5 @@
 from controladores.controlador_memoria_datos import ControladorMemoriaDatos
+from controladores.controlador_memoria_instrucciones import ControladorMemoriaInstrucciones
 from controladores.controlador_unidad_control import ControladorUnidadControl
 from utilidades import separador_palabras, transformador_binario, verificador_tipos
 
@@ -19,7 +20,8 @@ class TraductorInstrucciones:
     def __init__(
         self,
         controlador_unidad_control: ControladorUnidadControl,
-        controlador_memoria_datos: ControladorMemoriaDatos
+        controlador_memoria_datos: ControladorMemoriaDatos,
+        controlador_memoria_instrucciones: ControladorMemoriaInstrucciones
     ):
         self.__mapa_codops_binarios = controlador_unidad_control.obtener_codigos_binarios_codops()
         self.__mapa_tipos_dato_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_dato()
@@ -28,6 +30,8 @@ class TraductorInstrucciones:
         self.__longitud_instrucciones = controlador_unidad_control.obtener_longitud_instrucciones()
         self.__mapa_tipos_direccionamiento_binarios = controlador_unidad_control.obtener_codigos_binarios_tipos_direccionamiento()
         self.__controlador_memoria_datos = controlador_memoria_datos
+        self.__controlador_memoria_instrucciones = controlador_memoria_instrucciones
+        self.__etiquetas_actuales: dict = {}
 
     def traducir_programa(self, instrucciones: list[str]) -> list[str]:
         """
@@ -44,13 +48,32 @@ class TraductorInstrucciones:
         if not instrucciones:
             raise ValueError("El programa debe tener al menos una instrucción.")
 
+        posicion_inicial_memoria = self.__controlador_memoria_instrucciones.obtener_posicion_inicial_instrucciones(
+            instrucciones
+        )
+
+        self.__etiquetas_actuales = {}
         programa_traducido = []
+        contador_posicion_instruccion_local = 0
 
         for instruccion in instrucciones:
             if instruccion.strip() == "":
                 continue
+            if verificador_tipos.es_etiqueta(instruccion):
+                nombre_etiqueta = instruccion[:-1]
+                if nombre_etiqueta in self.__etiquetas_actuales:
+                    raise ValueError("No se pueden tener dos etiquetas con el mismo nombre.")
+                posicion_real_memoria = posicion_inicial_memoria + contador_posicion_instruccion_local
+                posicion_real_memoria_binario = transformador_binario.transformar_int_en_complemento_a_dos(
+                    str(posicion_real_memoria),
+                    self.__formato_instrucciones["valor_operando1"]
+                )
+                self.__etiquetas_actuales[nombre_etiqueta] = posicion_real_memoria_binario
+                continue
             instruccion_traducida: str = self.__traducir_instruccion(instruccion)
             programa_traducido.append(instruccion_traducida)
+            contador_posicion_instruccion_local += 1
+        print(self.__etiquetas_actuales)
         return programa_traducido
 
     def __traducir_instruccion(self, instruccion: str) -> str:

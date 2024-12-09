@@ -105,3 +105,4 @@ class UnidadControl:
         self.__unidad_control_cableada.mover_valor("pc", "mar", "registro", "registro")
         self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
         self.__unidad_control_cableada.activar_memoria_instrucciones()
+        self.__unidad_control_cableada.mover_valor("mbr", "ir", "registro", "registro")

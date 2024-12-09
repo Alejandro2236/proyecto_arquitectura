@@ -4,10 +4,10 @@ from typing import Optional
 from modelos.bus_control import BusControl
 from modelos.bus_datos import BusDatos
 from modelos.bus_direcciones import BusDirecciones
+from utilidades import transformador_binario
 
 
 class MemoriaBase(ABC):
-
     __CODIGOS_CONTROL: dict = {"00": "leer", "01": "escribir"}
 
     def __init__(self, capacidad: int):
@@ -71,7 +71,11 @@ class MemoriaBase(ABC):
                 raise ValueError("La indicación de control no debe estar vacía.")
             case "leer":
                 direccion: str = self._bus_direcciones.registro
-
+                posicion: int = transformador_binario.transformar_complemento_a_dos_en_int(direccion)
+                instruccion = self._direcciones[posicion]
+                if instruccion == 0:
+                    raise ValueError("La posición de memoria está vacía.")
+                self._bus_datos.enviar_a_mbr(instruccion)
             case "escribir":
                 ...
             case _:

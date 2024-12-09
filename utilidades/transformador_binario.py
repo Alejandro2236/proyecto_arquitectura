@@ -55,7 +55,6 @@ def transformar_complemento_a_dos_en_int(binario: str) -> int:
     except ValueError:
         raise ValueError(f"'{binario}' no es una cadena binaria válida.")
 
-    # Verifica si el número es negativo en complemento a dos.
     if binario[0] == '1':
         valor_entero -= (1 << bits)
 

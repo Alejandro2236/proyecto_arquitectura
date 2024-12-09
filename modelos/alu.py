@@ -25,9 +25,12 @@ class ALU:
     def __convertir_operando(self, operando: str, tipo_dato: str, bits: int = 48) -> Union[int, float, bool]:
         tipo = self.__interpretar_tipo_dato(tipo_dato)
         if tipo == "int":
-            return int(operando, 2)  # Binario a entero con signo
+            valor = int(operando, 2)
+            if operando[0] == "1":  # Negativo en complemento a 2
+                valor -= (1 << bits)
+            return valor
         elif tipo == "float":
-            return float(self.__binario_a_flotante(operando, bits))
+            return self.__binario_a_flotante(operando, bits)
         elif tipo == "bool":
             return bool(int(operando, 2))
         elif tipo == "desconocido":
@@ -35,10 +38,16 @@ class ALU:
         else:
             raise ValueError(f"Tipo de dato no soportado: {tipo}")
 
+    def __ajustar_a_48_bits(self, valor: int) -> str:
+        """Convierte un entero a su representación binaria en 48 bits."""
+        if valor < 0:  # Ajuste para números negativos
+            valor = (1 << 48) + valor
+        return f"{valor:048b}"
+
     def __guardar_resultado(self, resultado: Union[int, float, bool], tipo_dato: str, bits: int = 48) -> None:
         tipo = self.__interpretar_tipo_dato(tipo_dato)
         if tipo == "int":
-            self.__resultado = f"{resultado:0{bits}b}"
+            self.__resultado = self.__ajustar_a_48_bits(resultado)
         elif tipo == "float":
             self.__resultado = self.__flotante_a_binario(resultado, bits)
         elif tipo == "bool":
@@ -46,13 +55,17 @@ class ALU:
         else:
             raise ValueError(f"Tipo de dato no soportado para guardar resultado: {tipo}")
 
-    def ejecutar(self, codop: str, operando1: str, operando2: str, tipo_dato1: str, tipo_dato2: str) -> str:
+    def ejecutar(self, codop: str, operando1: str, operando2: str, tipo_dato1: str, tipo_dato2: str, bits: int = 48) -> str:
         self.__operando1 = operando1
         self.__operando2 = operando2
         self.__codop = codop
 
-        operando1_valor = self.__convertir_operando(operando1, tipo_dato1)
-        operando2_valor = self.__convertir_operando(operando2, tipo_dato2)
+        operando1_valor = self.__convertir_operando(operando1, tipo_dato1, bits)
+        # Convertir el segundo operando solo si es necesario
+        operando2_valor = None
+        if codop not in ["00111"]:  # Operaciones que no requieren segundo operando
+            operando2_valor = self.__convertir_operando(operando2, tipo_dato2, bits)
+
 
         resultado = 0
 
@@ -73,12 +86,12 @@ class ALU:
         elif codop == "00110":  # XOR bit a bit
             resultado = operando1_valor ^ operando2_valor
         elif codop == "00111":  # NOT bit a bit (solo operando1)
-            resultado = ~operando1_valor & ((1 << 48) - 1)  # Asegurarse de que el resultado esté dentro de 48 bits
+            resultado = ~operando1_valor & ((1 << bits) - 1)  # Asegurarse de que el resultado esté dentro del rango de bits
         else:
             raise ValueError(f"Código de operación no soportado: {codop}")
 
         # Guardar el resultado en binario
-        self.__guardar_resultado(resultado, tipo_dato1)
+        self.__guardar_resultado(resultado, tipo_dato1, bits)
 
         # Actualizar los flags
         self.__actualizar_flags(resultado, tipo_dato1)

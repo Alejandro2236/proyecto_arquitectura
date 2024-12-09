@@ -88,6 +88,7 @@ class UnidadControl:
     def estado_actual(self, nuevo_estado):
         match nuevo_estado:
             case EstadoCicloInstruccion.FI:
+                self.__estado_actual = EstadoCicloInstruccion.FI
                 self.__fetch_instruction()
 
     def asignar_unidad_control_cableada(self, unidad_control_cableada: UnidadControlCableada):
@@ -98,4 +99,7 @@ class UnidadControl:
             self.__estado_actual = EstadoCicloInstruccion.FI
 
     def __fetch_instruction(self):
-        ...
+        if self.__unidad_control_cableada is None:
+            raise ValueError("Unidad de control cableada no inicializada.")
+
+        self.__unidad_control_cableada.mover_valor("pc", "mar", "registro", "registro")

@@ -4,4 +4,7 @@
     <option name="sdkName" value="Python 3.10 (proyecto_arquitectura) (2)" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 virtualenv at C:\Users\hp\Desktop\ProgrammingAndDevelopment\Projects\PythonProjects\proyecto_arquitectura\.venv" project-jdk-type="Python SDK" />
+  <component name="PythonCompatibilityInspectionAdvertiser">
+    <option name="version" value="3" />
+  </component>
 </project>

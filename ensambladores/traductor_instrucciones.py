@@ -198,8 +198,8 @@ class TraductorInstrucciones:
     def __almacenar_en_posicion(self, valor_a_almacenar: str, posicion: int) -> None:
         self.__controlador_memoria_datos.almacenar_dato_en_posicion(valor_a_almacenar, posicion)
 
+    @staticmethod
     def __generar_operando_vacio(
-        self,
         longitud_direccionamiento: int,
         longitud_tipo_operando: int,
         longitud_valor_operando: int

@@ -35,6 +35,33 @@ def transformar_int_en_complemento_a_dos(numero: str, bits: int) -> str:
     return "{:0{}b}".format(numero_entero & mascara, bits)
 
 
+def transformar_complemento_a_dos_en_int(binario: str) -> int:
+    """
+    Convierte una representación binaria en complemento a dos en formato string
+    a un número entero en base 10, asumiendo que el número de bits es igual a
+    la longitud de la cadena binaria.
+
+    :param binario: La representación binaria del número en complemento a dos.
+    :type binario: str
+    :return: El número entero correspondiente en base 10.
+
+    :raises ValueError: Si binario contiene caracteres no válidos.
+    """
+
+    bits = len(binario)
+
+    try:
+        valor_entero = int(binario, 2)
+    except ValueError:
+        raise ValueError(f"'{binario}' no es una cadena binaria válida.")
+
+    # Verifica si el número es negativo en complemento a dos.
+    if binario[0] == '1':
+        valor_entero -= (1 << bits)
+
+    return valor_entero
+
+
 def transformar_float_en_formato_binario(numero: str, total_bits: int, cantidad_bits_exponente: int) -> str:
     if total_bits <= 0:
         raise ValueError("El número de bits debe ser un entero positivo.")

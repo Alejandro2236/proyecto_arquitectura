@@ -1,15 +1,23 @@
 from abc import ABC
+from typing import Optional
+
+from modelos.bus_control import BusControl
+from modelos.bus_datos import BusDatos
+from modelos.bus_direcciones import BusDirecciones
 
 
 class MemoriaBase(ABC):
 
-    __CODIGOS_CONTROL: dict = {"0": "leer", "1": "escribir"}
+    __CODIGOS_CONTROL: dict = {"00": "leer", "01": "escribir"}
 
     def __init__(self, capacidad: int):
         self._capacidad = capacidad
         self._direcciones: list = [0] * self._capacidad
         self._indicacion_control = None
         self._direccion_actual = None
+        self._bus_control: Optional[BusControl] = None
+        self._bus_direcciones: Optional[BusDirecciones] = None
+        self._bus_datos: Optional[BusDatos] = None
 
     @property
     def capacidad(self):
@@ -22,9 +30,9 @@ class MemoriaBase(ABC):
 
     @indicacion_control.setter
     def indicacion_control(self, indicacion_control: int):
-        if indicacion_control not in (0, 1):
-            raise ValueError("La señal de control debe ser 0 (lectura) o 1 (escritura).")
-        self._indicacion_control: int = indicacion_control
+        if indicacion_control not in ("00", "01"):
+            raise ValueError("La señal de control debe ser 00 (lectura) o 01 (escritura).")
+        self._indicacion_control: str = indicacion_control
 
     @property
     def direccion_actual(self):
@@ -56,12 +64,14 @@ class MemoriaBase(ABC):
         self._direcciones[posicion] = dato
 
     def ejecutar_indicacion_control(self):
+        self.indicacion_control = self._bus_control.registro
         accion = self.__CODIGOS_CONTROL[self._indicacion_control]
         match accion:
             case None:
                 raise ValueError("La indicación de control no debe estar vacía.")
             case "leer":
-                ...
+                direccion: str = self._bus_direcciones.registro
+
             case "escribir":
                 ...
             case _:

@@ -60,6 +60,30 @@ class MemoriaBase(ABC):
                 posiciones_libres.append(posicion)
         return posiciones_libres
 
+    @property
+    def bus_control(self):
+        return self._bus_control
+
+    @bus_control.setter
+    def bus_control(self, bus_control):
+        self._bus_control: BusControl = bus_control
+
+    @property
+    def bus_direcciones(self):
+        return self._bus_direcciones
+
+    @bus_direcciones.setter
+    def bus_direcciones(self, bus_direcciones):
+        self._bus_direcciones: BusDirecciones = bus_direcciones
+
+    @property
+    def bus_datos(self):
+        return self._bus_datos
+
+    @bus_datos.setter
+    def bus_datos(self, bus_datos):
+        self._bus_datos: BusDatos = bus_datos
+
     def almacenar_dato_en_posicion(self, dato: str, posicion: int):
         self._direcciones[posicion] = dato
 

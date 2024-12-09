@@ -51,9 +51,9 @@ class UnidadControl:
         "11": "directo_instrucciones"
     }
 
-    def __init__(self):
+    def __init__(self, unidad_control_cableada: UnidadControlCableada):
         self.__estado_actual: Optional[EstadoCicloInstruccion] = None
-        self.__unidad_control_cableada: Optional[UnidadControlCableada] = None
+        self.__unidad_control_cableada: UnidadControlCableada = unidad_control_cableada
 
     @property
     def codops(self):
@@ -90,9 +90,6 @@ class UnidadControl:
             case EstadoCicloInstruccion.FI:
                 self.__estado_actual = EstadoCicloInstruccion.FI
                 self.__fetch_instruction()
-
-    def asignar_unidad_control_cableada(self, unidad_control_cableada: UnidadControlCableada):
-        self.__unidad_control_cableada: UnidadControlCableada = unidad_control_cableada
 
     def continuar_ciclo_instrucciones(self):
         if self.__estado_actual is None:

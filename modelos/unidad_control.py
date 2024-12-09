@@ -1,3 +1,9 @@
+from typing import Optional
+
+from modelos.estado_ciclo_instruccion import EstadoCicloInstruccion
+from modelos.unidad_control_cableada import UnidadControlCableada
+
+
 class UnidadControl:
     __CODOPS: dict = {
         "00000": {"nombre": "ADD", "cantidad_operandos": 3},
@@ -45,6 +51,10 @@ class UnidadControl:
         "11": "directo_instrucciones"
     }
 
+    def __init__(self):
+        self.__estado_actual: Optional[EstadoCicloInstruccion] = None
+        self.__unidad_control_cableada: Optional[UnidadControlCableada] = None
+
     @property
     def codops(self):
         """Proporciona acceso de sólo lectura al mapa de codops."""
@@ -69,3 +79,23 @@ class UnidadControl:
     def tipos_direccionamiento(self):
         """Proporciona acceso de sólo lectura al mapa de tipos de direccionamiento"""
         return self.__TIPOS_DIRECCIONAMIENTO
+
+    @property
+    def estado_actual(self):
+        raise AttributeError("Elemento no accesible.")
+
+    @estado_actual.setter
+    def estado_actual(self, nuevo_estado):
+        match nuevo_estado:
+            case EstadoCicloInstruccion.FI:
+                self.__fetch_instruction()
+
+    def asignar_unidad_control_cableada(self, unidad_control_cableada: UnidadControlCableada):
+        self.__unidad_control_cableada: UnidadControlCableada = unidad_control_cableada
+
+    def continuar_ciclo_instrucciones(self):
+        if self.__estado_actual is None:
+            self.__estado_actual = EstadoCicloInstruccion.FI
+
+    def __fetch_instruction(self):
+        ...

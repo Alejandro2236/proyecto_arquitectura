@@ -1,11 +1,11 @@
 class Pc:
 
     def __init__(self):
-        self.__registro: str = ""
+        self.__registro: str = "0"
 
     @property
     def registro(self):
-        raise AttributeError("La señal de control no es accesible desde el exterior.")    
+        return self.__registro
 
     @registro.setter
     def registro(self,registro: str):

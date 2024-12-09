@@ -5,6 +5,9 @@ from modelos.mbr import Mbr
 class UnidadControlCableada:
     def __init__(self, *instancias):
         self.__componentes: dict = {instancia.__class__.__name__.lower(): instancia for instancia in instancias}
+        for instancia in instancias:
+            if instancia.__class__.__name__.lower() == "unidadcontrol":
+                instancia.asignar_unidad_control_cableada(self)
 
     def mover_valor(
         self,

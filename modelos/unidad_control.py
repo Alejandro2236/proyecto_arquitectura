@@ -96,10 +96,12 @@ class UnidadControl:
 
     def continuar_ciclo_instrucciones(self):
         if self.__estado_actual is None:
-            self.__estado_actual = EstadoCicloInstruccion.FI
+            self.estado_actual = EstadoCicloInstruccion.FI
 
     def __fetch_instruction(self):
         if self.__unidad_control_cableada is None:
             raise ValueError("Unidad de control cableada no inicializada.")
 
         self.__unidad_control_cableada.mover_valor("pc", "mar", "registro", "registro")
+        self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+        self.__unidad_control_cableada.activar_memoria_instrucciones()

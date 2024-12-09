@@ -1,7 +1,7 @@
 class Pc:
 
     def __init__(self):
-        self.__registro: str = "0" * 48
+        self.__registro: str = "0" * 8
 
     @property
     def registro(self):

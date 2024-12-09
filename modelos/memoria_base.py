@@ -3,6 +3,8 @@ from abc import ABC
 
 class MemoriaBase(ABC):
 
+    __CODIGOS_CONTROL: dict = {"0": "leer", "1": "escribir"}
+
     def __init__(self, capacidad: int):
         self._capacidad = capacidad
         self._direcciones: list = [0] * self._capacidad
@@ -52,3 +54,15 @@ class MemoriaBase(ABC):
 
     def almacenar_dato_en_posicion(self, dato: str, posicion: int):
         self._direcciones[posicion] = dato
+
+    def ejecutar_indicacion_control(self):
+        accion = self.__CODIGOS_CONTROL[self._indicacion_control]
+        match accion:
+            case None:
+                raise ValueError("La indicación de control no debe estar vacía.")
+            case "leer":
+                ...
+            case "escribir":
+                ...
+            case _:
+                raise ValueError("Indicación de control no reconocida.")

@@ -1,5 +1,9 @@
-from modelos.mar import Mar
-from modelos.mbr import Mbr
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from modelos.mar import Mar
+    from modelos.mbr import Mbr
+    from modelos.memoria_instrucciones import MemoriaInstrucciones
 
 
 class UnidadControlCableada:
@@ -57,3 +61,7 @@ class UnidadControlCableada:
     def enviar_dato_a_mbr(self, dato: str):
         mbr: Mbr = self.__componentes["mbr"]
         mbr.registro = dato
+
+    def activar_memoria_instrucciones(self):
+        memoria_instrucciones: MemoriaInstrucciones = self.__componentes["memoriainstrucciones"]
+        memoria_instrucciones.ejecutar_indicacion_control()

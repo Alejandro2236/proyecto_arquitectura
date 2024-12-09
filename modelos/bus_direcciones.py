@@ -11,6 +11,14 @@ class BusDirecciones:
         self.__mar: Optional[Mar] = None
 
     @property
+    def registro(self):
+        return self.__registro
+
+    @registro.setter
+    def registro(self, nuevo_valor):
+        self.__registro = nuevo_valor
+
+    @property
     def mar(self):
         raise AttributeError("Bus de direcciones no accesible desde afuera.")
 

@@ -316,6 +316,14 @@ class UnidadControl:
         if self.__operacion_actual == "STORE":
             self.__store()
             return
+        if self.__operacion_actual in ("ADD", "SUB", "MUL", "DIV", "AND", "OR", "XOR"):
+            self.__unidad_control_cableada.ejecutar(
+                self.__codop,
+                self.__operando2,
+                self.__operando3,
+                self.__obtener_tipo(self.__tipo_operando2),
+                self.__obtener_tipo(self.__tipo_operando3)
+            )
 
     def __load(self):
         if self.__direccionamiento_operando1 != "registro":
@@ -340,7 +348,9 @@ class UnidadControl:
             raise ValueError("Load solo recibe direccionamiento de registro como segundo dato.")
 
         self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando1)
-        dato_registro = self.__unidad_control_cableada.leer_dato_registro(transformador_binario.transformar_complemento_a_dos_en_int(self.__operando2))
+        dato_registro = self.__unidad_control_cableada.leer_dato_registro(
+            transformador_binario.transformar_complemento_a_dos_en_int(self.__operando2)
+        )
         self.__unidad_control_cableada.enviar_dato_a_mbr(dato_registro)
         self.__unidad_control_cableada.enviar_dato("01", "buscontrol", "registro")
         self.__unidad_control_cableada.activar_memoria_datos()
@@ -351,4 +361,4 @@ class UnidadControl:
     def to_dict(self):
         return {
             "estado_actual": self.__estado_actual,
-        }  
+        }

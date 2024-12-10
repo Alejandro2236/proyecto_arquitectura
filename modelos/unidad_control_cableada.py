@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from modelos.alu import ALU
 from modelos.banco_registros import BancoRegistros
 from modelos.memoria_datos import MemoriaDatos
 from modelos.registro import Registro
@@ -88,6 +89,10 @@ class UnidadControlCableada:
         banco_registros: BancoRegistros = self.__componentes["bancoregistros"]
         registro: Registro = banco_registros.obtener_registro(numero_registro)
         return registro.valor_registro
+
+    def ejecutar(self, codop, operando1, operando2, tipo_operando1, tipo_operando2):
+        alu: ALU = self.__componentes["alu"]
+        alu.ejecutar(codop, operando1, operando2, tipo_operando1, tipo_operando2)
 
     def to_dict(self):
         return {

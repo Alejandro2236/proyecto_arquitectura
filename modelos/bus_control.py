@@ -10,3 +10,8 @@ class BusControl:
     @registro.setter
     def registro(self, nuevo_valor):
         self.__registro = nuevo_valor
+
+    def to_dict(self):
+        return {
+            "registro": self.__registro,
+        }  

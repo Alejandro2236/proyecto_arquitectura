@@ -327,3 +327,8 @@ class UnidadControl:
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado
+
+    def to_dict(self):
+        return {
+            "estado_actual": self.__estado_actual,
+        }  

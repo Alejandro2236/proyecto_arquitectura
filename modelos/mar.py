@@ -28,3 +28,8 @@ class Mar:
     @bus_direcciones.setter
     def bus_direcciones(self, bus_direcciones):
         self.__bus_direcciones: BusDirecciones = bus_direcciones
+
+    def to_dict(self):
+        return {
+            "registro": self.__registro,
+        }  

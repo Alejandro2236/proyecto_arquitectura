@@ -104,3 +104,8 @@ class MemoriaBase(ABC):
                 ...
             case _:
                 raise ValueError("Indicación de control no reconocida.")
+
+    def to_dict(self):
+        return {
+            "direcciones": self._direcciones,
+        }  

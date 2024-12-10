@@ -146,3 +146,10 @@ class ALU:
 
     def obtener_flags(self) -> dict:
         return self.__flags
+    
+    def to_dict(self):
+        return {
+            "operando1": self.__operando1,
+            "operando2": self.__operando2,
+            "resultado": self.__resultado
+        }   

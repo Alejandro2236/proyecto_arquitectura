@@ -27,3 +27,8 @@ class Mbr:
     @bus_datos.setter
     def bus_datos(self, bus_datos):
         self.__bus_datos = bus_datos
+
+    def to_dict(self):
+        return {
+            "registro": self.__registro,
+        }  

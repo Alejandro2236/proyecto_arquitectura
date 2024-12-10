@@ -10,3 +10,8 @@ class BancoRegistros:
 
     def obtener_registro(self, numero: int) -> Registro:
         return self.__registros[numero]
+
+    def to_dict(self):
+        return {
+            "registros": self.__registros,
+        }

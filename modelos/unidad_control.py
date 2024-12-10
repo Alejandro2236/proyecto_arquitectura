@@ -59,9 +59,13 @@ class UnidadControl:
         self.__operando1: str = ""
         self.__direccionamiento_operando1: str = ""
         self.__operando2: str = ""
+        self.__direccion_operando2: str = ""
         self.__tipo_operando2: str = ""
+        self.__tipo_direccionamineto_operando2: str = ""
         self.__operando3: str = ""
+        self.__direccion_operando3: str = ""
         self.__tipo_operando3: str = ""
+        self.__tipo_direccionamineto_operando3: str = ""
         self.__estado_siguiente_a_di: Optional[EstadoCicloInstruccion] = None
 
     @property
@@ -149,6 +153,9 @@ class UnidadControl:
             case EstadoCicloInstruccion.CO:
                 self.__estado_actual = nuevo_estado
                 self.__calculate_operand()
+            case EstadoCicloInstruccion.FO:
+                self.__estado_actual = nuevo_estado
+                self.__fetch_operand()
 
     def asignar_unidad_control_cableada(self, unidad_control_cableada):
         self.__unidad_control_cableada = unidad_control_cableada
@@ -161,8 +168,10 @@ class UnidadControl:
             self.estado_actual = EstadoCicloInstruccion.DI
             return
         if self.__estado_actual == EstadoCicloInstruccion.DI:
-            self.__estado_actual = self.__estado_siguiente_a_di
+            self.estado_actual = self.__estado_siguiente_a_di
             return
+        if self.__estado_actual == EstadoCicloInstruccion.CO:
+            self.estado_actual = EstadoCicloInstruccion.FO
 
     def __fetch_instruction(self):
         if self.__unidad_control_cableada is None:
@@ -229,22 +238,27 @@ class UnidadControl:
 
     def __decodificar_operando2(self, codigo_direccionamiento: str, codigo_tipo: str):
         self.__tipo_operando2 = self.__obtener_tipo(codigo_tipo)
-        self.__operando2 = self.__instruccion_actual[23:33]
-        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento)
+        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento, 2)
 
     def __decodificar_operando3(self, codigo_direccionamiento: str, codigo_tipo: str):
         self.__tipo_operando3 = self.__obtener_tipo(codigo_tipo)
-        self.__operando3 = self.__instruccion_actual[37:47]
-        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento)
+        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento, 3)
 
-    def __decodificar_operando_diferente_a_1(self, codigo_direccionamiento: str):
+    def __decodificar_operando_diferente_a_1(self, codigo_direccionamiento: str, numero_operando: int):
         direccionamiento_operando = self.__obtener_tipo_direccionamiento(codigo_direccionamiento)
         if self.__necesita_calcular_direccion(direccionamiento_operando):
-
+            if numero_operando == 2:
+                self.__tipo_direccionamineto_operando2 = direccionamiento_operando
+            elif numero_operando == 3:
+                self.__tipo_direccionamineto_operando3 = direccionamiento_operando
             if self.__estado_actual == EstadoCicloInstruccion.CO:
                 return
             self.__estado_siguiente_a_di = EstadoCicloInstruccion.CO
             return
+        if numero_operando == 2:
+            self.__operando2 = self.__instruccion_actual[23:33]
+        elif numero_operando == 3:
+            self.__operando3 = self.__instruccion_actual[37:47]
         self.__estado_siguiente_a_di = EstadoCicloInstruccion.EI
 
     @staticmethod
@@ -252,7 +266,16 @@ class UnidadControl:
         return direccionamiento == "directo_datos" or direccionamiento == "registro"
 
     def __calculate_operand(self):
-        return
+        if self.__operando2 == "":
+            self.__direccion_operando2 = self.__instruccion_actual[23:33]
+        if self.__operando3 == "":
+            self.__direccion_operando3 = self.__instruccion_actual[37:47]
+
+    def __fetch_operand(self):
+        self.__unidad_control_cableada.enviar_dato("a", "registro", "registro")
+        self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+        self.__unidad_control_cableada.activar_memoria_instrucciones()
+        self.__unidad_control_cableada.mover_valor("mbr", "ir", "registro", "registro")
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado

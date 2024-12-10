@@ -81,9 +81,9 @@ class TestCaseUnidadControl(unittest.TestCase):
         self.assertEqual("MUL", unidad_control.operacion_actual)
         self.assertEqual("0000000010", unidad_control.operando1)
         self.assertEqual("directo_datos", unidad_control.direccionamiento_operando1)
-        self.assertEqual("0000000010", unidad_control.operando2)
+        self.assertEqual("", unidad_control.operando2)
         self.assertEqual("desconocido", unidad_control.tipo_operando2)
-        self.assertEqual("0000000000", unidad_control.operando3)
+        self.assertEqual("", unidad_control.operando3)
         self.assertEqual("float", unidad_control.tipo_operando3)
         self.assertEqual(EstadoCicloInstruccion.CO, unidad_control.estado_siguiente_a_di)
 

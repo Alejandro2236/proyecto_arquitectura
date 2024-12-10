@@ -4,14 +4,12 @@ from controladores.controlador_memoria_datos import ControladorMemoriaDatos
 from controladores.controlador_memoria_instrucciones import ControladorMemoriaInstrucciones
 from controladores.controlador_unidad_control import ControladorUnidadControl
 from ensambladores.traductor_instrucciones import TraductorInstrucciones
-from modelos.unidad_control_cableada import UnidadControlCableada
 
 
 class TestCaseTraductorInstrucciones(unittest.TestCase):
     def test_traducir_programa_datos_validos(self):
         controlador_unidad_control = ControladorUnidadControl()
-        unidad_control_cableada = UnidadControlCableada()
-        controlador_unidad_control.crear_unidad_control(unidad_control_cableada)
+        controlador_unidad_control.crear_unidad_control()
         controlador_memoria_datos = ControladorMemoriaDatos()
         controlador_memoria_datos.crear_memoria_datos(32)
         controlador_memoria_instrucciones = ControladorMemoriaInstrucciones()

@@ -1,7 +1,6 @@
 from typing import Optional
 
 from modelos.unidad_control import UnidadControl
-from modelos.unidad_control_cableada import UnidadControlCableada
 
 
 class ControladorUnidadControl:
@@ -14,10 +13,10 @@ class ControladorUnidadControl:
         self.__formato_floats: Optional[dict] = None
         self.__tipos_direccionamiento: Optional[dict] = None
 
-    def crear_unidad_control(self, unidad_control_cableada: UnidadControlCableada):
+    def crear_unidad_control(self):
         if self.__unidad_control is not None:
             raise ValueError("La unidad de control ya existe,")
-        self.__unidad_control: UnidadControl = UnidadControl(unidad_control_cableada)
+        self.__unidad_control: UnidadControl = UnidadControl()
 
     def obtener_nombres_codop(self) -> set[str]:
         self.__inicializar_info_codops()

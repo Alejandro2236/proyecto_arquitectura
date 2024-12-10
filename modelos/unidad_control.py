@@ -51,9 +51,18 @@ class UnidadControl:
         "11": "directo_instrucciones"
     }
 
-    def __init__(self, unidad_control_cableada: UnidadControlCableada):
+    def __init__(self):
+        self.__unidad_control_cableada: Optional[UnidadControlCableada] = None
         self.__estado_actual: Optional[EstadoCicloInstruccion] = None
-        self.__unidad_control_cableada: UnidadControlCableada = unidad_control_cableada
+        self.__instruccion_actual: str = ""
+        self.__operacion_actual: str = ""
+        self.__operando1: str = ""
+        self.__direccionamiento_operando1: str = ""
+        self.__operando2: str = ""
+        self.__tipo_operando2: str = ""
+        self.__operando3: str = ""
+        self.__tipo_operando3: str = ""
+        self.__estado_siguiente_a_di: Optional[EstadoCicloInstruccion] = None
 
     @property
     def codops(self):
@@ -88,12 +97,66 @@ class UnidadControl:
     def estado_actual(self, nuevo_estado):
         match nuevo_estado:
             case EstadoCicloInstruccion.FI:
-                self.__estado_actual = EstadoCicloInstruccion.FI
+                self.__estado_actual = nuevo_estado
                 self.__fetch_instruction()
+            case EstadoCicloInstruccion.DI:
+                self.__estado_actual = nuevo_estado
+                self.__decode_instruction()
+
+    @property
+    def instruccion_actual(self):
+        return self.__instruccion_actual
+
+    @instruccion_actual.setter
+    def instruccion_actual(self, value):
+        self.__instruccion_actual = value
+
+    @property
+    def unidad_control_cableada(self):
+        return self.__unidad_control_cableada
+
+    @property
+    def operacion_actual(self):
+        return self.__operacion_actual
+
+    @property
+    def operando1(self):
+        return self.__operando1
+
+    @property
+    def direccionamiento_operando1(self):
+        return self.__direccionamiento_operando1
+
+    @property
+    def operando2(self):
+        return self.__operando2
+
+    @property
+    def tipo_operando2(self):
+        return self.__tipo_operando2
+
+    @property
+    def operando3(self):
+        return self.__operando3
+
+    @property
+    def tipo_operando3(self):
+        return self.__tipo_operando3
+
+    @property
+    def estado_siguiente_a_di(self):
+        return self.__estado_siguiente_a_di
+
+    def asignar_unidad_control_cableada(self, unidad_control_cableada):
+        self.__unidad_control_cableada = unidad_control_cableada
 
     def continuar_ciclo_instrucciones(self):
         if self.__estado_actual is None:
             self.estado_actual = EstadoCicloInstruccion.FI
+            return
+        if self.__estado_actual == EstadoCicloInstruccion.FI:
+            self.estado_actual = EstadoCicloInstruccion.DI
+            return
 
     def __fetch_instruction(self):
         if self.__unidad_control_cableada is None:
@@ -103,3 +166,83 @@ class UnidadControl:
         self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
         self.__unidad_control_cableada.activar_memoria_instrucciones()
         self.__unidad_control_cableada.mover_valor("mbr", "ir", "registro", "registro")
+
+    def __decode_instruction(self):
+        self.__unidad_control_cableada.mover_valor("ir", "unidadcontrol", "registro", "instruccion_actual")
+        codop_binario = self.__instruccion_actual[:self.__FORMATO_INSTRUCCIONES["codop"]]
+        datos_codop = self.__obtener_datos_codop(codop_binario)
+        self.__operacion_actual = datos_codop["nombre"]
+        cantidad_operandos = datos_codop["cantidad_operandos"]
+        if cantidad_operandos == 0:
+            self.__estado_siguiente_a_di = EstadoCicloInstruccion.EI
+            return
+        if cantidad_operandos >= 1:
+            codigo_direccionamiento_operando1 = self.__codigo_direccionamiento_operando1()
+            self.__decodificar_operando1(codigo_direccionamiento_operando1)
+        if cantidad_operandos >= 2:
+            codigo_direccionamiento_operando2 = self.__codigo_direccionamiento_operando2()
+            codigo_tipo_operando2 = self.__codigo_tipo_operando2()
+            self.__decodificar_operando2(codigo_direccionamiento_operando2, codigo_tipo_operando2)
+        if cantidad_operandos == 3:
+            codigo_direccionamiento_operando3 = self.__codigo_direccionamiento_operando3()
+            codigo_tipo_operando3 = self.__codigo_tipo_operando3()
+            self.__decodificar_operando3(codigo_direccionamiento_operando3, codigo_tipo_operando3)
+
+    def __obtener_datos_codop(self, codigo: str) -> dict:
+        return self.__CODOPS[codigo]
+
+    def __obtener_tipo_direccionamiento(self, codigo: str) -> str:
+        return self.__TIPOS_DIRECCIONAMIENTO[codigo]
+
+    def __obtener_tipo(self, codigo: str) -> str:
+        return self.__TIPOS_DATO[codigo]
+
+    def __codigo_direccionamiento_operando1(self) -> str:
+        codigo_direccionamiento = self.__instruccion_actual[5:7]
+        return codigo_direccionamiento
+
+    def __codigo_direccionamiento_operando2(self) -> str:
+        codigo_direccionamiento = self.__instruccion_actual[19:21]
+        return codigo_direccionamiento
+
+    def __codigo_direccionamiento_operando3(self) -> str:
+        codigo_direccionamiento = self.__instruccion_actual[33:35]
+        return codigo_direccionamiento
+
+    def __codigo_tipo_operando2(self) -> str:
+        codigo_tipo = self.__instruccion_actual[21:23]
+        return codigo_tipo
+
+    def __codigo_tipo_operando3(self) -> str:
+        codigo_tipo = self.__instruccion_actual[35:37]
+        return codigo_tipo
+
+    def __decodificar_operando1(self, codigo_direccionamiento: str):
+        self.__direccionamiento_operando1 = self.__obtener_tipo_direccionamiento(codigo_direccionamiento)
+        self.__operando1 = self.__instruccion_actual[9:19]
+
+    def __decodificar_operando2(self, codigo_direccionamiento: str, codigo_tipo: str):
+        self.__tipo_operando2 = self.__obtener_tipo(codigo_tipo)
+        self.__operando2 = self.__instruccion_actual[23:33]
+        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento)
+
+    def __decodificar_operando3(self, codigo_direccionamiento: str, codigo_tipo: str):
+        self.__tipo_operando3 = self.__obtener_tipo(codigo_tipo)
+        self.__operando3 = self.__instruccion_actual[37:47]
+        self.__decodificar_operando_diferente_a_1(codigo_direccionamiento)
+
+    def __decodificar_operando_diferente_a_1(self, codigo_direccionamiento: str):
+        direccionamiento_operando = self.__obtener_tipo_direccionamiento(codigo_direccionamiento)
+        if (self.__necesita_calcular_direccion(direccionamiento_operando)):
+            if self.__estado_actual == EstadoCicloInstruccion.CO:
+                return
+            self.__estado_siguiente_a_di = EstadoCicloInstruccion.CO
+            return
+        self.__estado_siguiente_a_di = EstadoCicloInstruccion.EI
+
+    @staticmethod
+    def __necesita_calcular_direccion(direccionamiento: str) -> bool:
+        return direccionamiento == "directo_datos" or direccionamiento == "registro"
+
+    def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
+        self.__estado_actual = estado

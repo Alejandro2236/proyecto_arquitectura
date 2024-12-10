@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
 
+from modelos.banco_registros import BancoRegistros
 from modelos.memoria_datos import MemoriaDatos
+from modelos.registro import Registro
 
 if TYPE_CHECKING:
     from modelos.mar import Mar
@@ -71,3 +73,13 @@ class UnidadControlCableada:
     def activar_memoria_datos(self):
         memoria_datos: MemoriaDatos = self.__componentes["memoriadatos"]
         memoria_datos.ejecutar_indicacion_control()
+
+    def mover_a_registro(self, valor: str, tipo: str, numero_registro: int):
+        banco_registros: BancoRegistros = self.__componentes["bancoregistros"]
+        registro: Registro = banco_registros.obtener_registro(numero_registro)
+        registro.valor_registro = valor
+        registro.tipo_registro = tipo
+
+    def leer_registro_mbr(self):
+        mbr: Mbr = self.__componentes["mbr"]
+        return mbr.registro

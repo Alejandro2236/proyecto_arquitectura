@@ -2,6 +2,7 @@ from typing import Optional
 
 from modelos.estado_ciclo_instruccion import EstadoCicloInstruccion
 from modelos.unidad_control_cableada import UnidadControlCableada
+from utilidades import transformador_binario
 
 
 class UnidadControl:
@@ -55,6 +56,7 @@ class UnidadControl:
         self.__unidad_control_cableada: Optional[UnidadControlCableada] = None
         self.__estado_actual: Optional[EstadoCicloInstruccion] = None
         self.__instruccion_actual: str = ""
+        self.__codop: str = ""
         self.__operacion_actual: str = ""
         self.__operando1: str = ""
         self.__direccionamiento_operando1: str = ""
@@ -165,6 +167,9 @@ class UnidadControl:
             case EstadoCicloInstruccion.FO:
                 self.__estado_actual = nuevo_estado
                 self.__fetch_operand()
+            case EstadoCicloInstruccion.EI:
+                self.__estado_actual = nuevo_estado
+                self.__execute_operand()
 
     def asignar_unidad_control_cableada(self, unidad_control_cableada):
         self.__unidad_control_cableada = unidad_control_cableada
@@ -181,6 +186,8 @@ class UnidadControl:
             return
         if self.__estado_actual == EstadoCicloInstruccion.CO:
             self.estado_actual = EstadoCicloInstruccion.FO
+        if self.__estado_actual == EstadoCicloInstruccion.FO:
+            self.estado_actual = self.__estado_siguiente_a_fo
 
     def __fetch_instruction(self):
         if self.__unidad_control_cableada is None:
@@ -194,6 +201,7 @@ class UnidadControl:
     def __decode_instruction(self):
         self.__unidad_control_cableada.mover_valor("ir", "unidadcontrol", "registro", "instruccion_actual")
         codop_binario = self.__instruccion_actual[:self.__FORMATO_INSTRUCCIONES["codop"]]
+        self.__codop = codop_binario
         datos_codop = self.__obtener_datos_codop(codop_binario)
         self.__operacion_actual = datos_codop["nombre"]
         cantidad_operandos = datos_codop["cantidad_operandos"]
@@ -255,7 +263,9 @@ class UnidadControl:
 
     def __decodificar_operando_diferente_a_1(self, codigo_direccionamiento: str, numero_operando: int):
         direccionamiento_operando = self.__obtener_tipo_direccionamiento(codigo_direccionamiento)
-        if self.__necesita_calcular_direccion(direccionamiento_operando):
+        if self.__necesita_calcular_direccion(direccionamiento_operando) and not self.__es_salto(
+            self.__operacion_actual
+        ):
             if numero_operando == 2:
                 self.__tipo_direccionamineto_operando2 = direccionamiento_operando
             elif numero_operando == 3:
@@ -274,6 +284,9 @@ class UnidadControl:
     def __necesita_calcular_direccion(direccionamiento: str) -> bool:
         return direccionamiento == "directo_datos" or direccionamiento == "registro"
 
+    def __es_salto(self, operacion: str) -> bool:
+        return operacion in ("JMP", "JEQ", "JNE", "JLT", "JGT")
+
     def __calculate_operand(self):
         if self.__operando2 == "":
             self.__direccion_operando2 = self.__instruccion_actual[23:33]
@@ -290,10 +303,27 @@ class UnidadControl:
             if self.__operando3 == "":
                 self.__estado_siguiente_a_fo = EstadoCicloInstruccion.CO
         if self.__operando3 == "":
-            self.__unidad_control_cableada.enviar_dato(self.__direccion_operando3, "mar", "registro")
+            self.__unidad_control_cableada.enviar_direccion_a_mar(self.__direccion_operando3)
             self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
             self.__unidad_control_cableada.activar_memoria_datos()
             self.__unidad_control_cableada.mover_valor("mbr", "unidadcontrol", "registro", "operando3")
+
+    def __execute_operand(self):
+        if self.__operacion_actual == "LOAD":
+            if self.__direccionamiento_operando1 != "registro":
+                raise ValueError("Load solo recibe direccionamiento de registro como primer dato.")
+            if self.__tipo_direccionamineto_operando2 != "directo_datos":
+                raise ValueError("Load solo recibe direccionamiento directo como segundo dato.")
+
+            self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando2)
+            self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+            self.__unidad_control_cableada.activar_memoria_datos()
+            registo_mbr = self.__unidad_control_cableada.leer_registro_mbr()
+            self.__unidad_control_cableada.mover_a_registro(
+                registo_mbr,
+                "00",
+                transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
+            )
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado

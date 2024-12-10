@@ -11,4 +11,7 @@ class Pc:
     def registro(self,registro: str):
         self.__registro = registro
 
-        
+    def to_dict(self):
+        return {
+            "registro": self.__registro,
+        }  

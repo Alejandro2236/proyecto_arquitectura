@@ -1,0 +1,325 @@
+/* Contenedor principal */
+/* Contenedor principal */
+.main-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: transparent;
+}
+
+/* Contenedor de la ALU */
+.alu-container {
+    width: 300px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Título de la ALU */
+.alu-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #800080;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Contenedor interno para los cuadros */
+.alu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    justify-items: center;
+    align-items: center;
+}
+
+/* Contenedor individual de OPERANDO 1 y OPERANDO 2 */
+.alu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Contenedor individual de RESULTADO */
+.alu-result-item {
+    grid-column: span 2; /* Ocupa las dos columnas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    justify-self: center;
+}
+
+/* Títulos individuales de los cuadros */
+.alu-title-square {
+    font-size: 14px;
+    font-weight: bold;
+    color: #800080;
+    text-align: center;
+}
+
+/* Título del cuadro RESULTADO */
+.alu-title-result {
+    font-size: 14px;
+    font-weight: bold;
+    color: #800080;
+    text-align: center;
+}
+
+/* Cuadrados dentro de la ALU */
+.alu-square {
+    width: 130px;
+    height: 130px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+/* Cuadro de RESULTADO */
+.alu-result {
+    width: 130px;
+    height: 130px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+/* Contenedor principal de MAR, MBR e IR */
+.mar-mbr-ir-container {
+    display: flex;
+    flex-direction: column; /* Asegura que sea una columna */
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    gap: 10px; /* Espaciado entre los cuadros */
+    margin-left:90px;
+}
+
+/* Contenedor interno para MAR, MBR e IR */
+.mar-mbr-ir-grid {
+    display: flex;
+    flex-direction: column; /* Ordena los elementos hacia abajo */
+    align-items: center;
+    gap: 10px; /* Espaciado vertical */
+}
+
+/* Estilos para los cuadros de MAR, MBR e IR */
+.mar-mbr-ir-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+/* Cuadros */
+.mar-mbr-ir-square {
+    width: 300px;
+    height: 70px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+
+/* Contenedor de las unidades de control debajo de la ALU */
+.control-units-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espaciado entre columnas izquierda y derecha */
+    margin-top: 20px;
+}
+
+/* Columnas izquierda y derecha */
+.control-left-column,
+.control-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaciado entre cuadros de una misma columna */
+}
+
+/* Cuadro individual con su título */
+.control-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Espaciado entre título y cuadro */
+}
+
+/* Cuadros de PC, PSW, etc. */
+.control-square {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+
+/* Contenedor del Banco de Registros */
+.bank-of-registers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Espaciado respecto al IR */
+    gap: 5px; /* Espaciado entre el texto y el cuadro */
+}
+
+/* Cuadro del Banco de Registros */
+.registers-square {
+    width: 300px;
+    height: 195px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Título del Banco de Registros */
+.registers-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #800080;
+    text-align: center;
+}.info-square{
+    width: 300px;
+    height: 110px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Contenedor de los Buses */
+.buses-container {
+    display: flex;
+    flex-direction: column; /* Asegura que sea una columna */
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    gap: 10px; /* Espaciado entre los cuadros */
+    margin-left:125px;
+}
+
+.content-box{
+
+    width: 208px;
+    height: 208px;
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+
+}
+
+/* Contenedor común para cuadro de memoria y botones */
+.memory-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 525px; /* Ajusta el ancho */
+    height: 650px;
+    border: 2px solid #800080; /* Contenedor general con bordes */
+    border-radius: 5px;
+    padding: 15px;
+    background-color: transparent;
+    margin-left: 50px;
+}
+
+/* Contenedor de MEMORIAS */
+.memory-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Se ajusta al contenedor padre */
+    border: 2px solid #800080;
+    border-radius: 5px;
+    background-color: transparent;
+    margin-bottom: 15px;
+}
+
+/* Título de MEMORIAS */
+.memory-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #800080;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 2px solid #800080;
+    width: 100%;
+}
+
+/* Contenedor de las columnas */
+.memory-columns-container {
+    display: flex;
+    width: 100%;
+    height: 550px;
+    border-top: 2px solid #800080;
+}
+
+/* Columnas */
+.memory-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #800080;
+}
+
+.memory-column:last-child {
+    border-right: none; /* Elimina borde derecho en la última columna */
+}
+
+/* Títulos de las columnas */
+.memory-subtitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #800080;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 1px solid #800080;
+    width: 100%;
+}
+
+/* Contenido con scroll individual */
+.memory-content {
+    flex: 1;
+    width: 100%;
+    height: 300px; /* Altura visible del scroll */
+    overflow-y: auto; /* Scroll vertical dentro de cada columna */
+    background-color: #ffffff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Contenedor para los botones */
+.button-container {
+    display: flex;
+    justify-content: space-around; /* Distribuye los botones uniformemente */
+    width: 100%; /* Alineación con el contenedor padre */
+    margin-top: 10px;
+}
+
+/* Estilo de los botones */
+.memory-button {
+    padding: 10px 15px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100px;
+    height: 40px;
+}
+
+.memory-button:hover {
+    background-color: #660066;
+}

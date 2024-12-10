@@ -30,3 +30,7 @@ class BusDatos:
         self.registro = dato
         self.__mbr.registro = dato
 
+    def to_dict(self):
+        return {
+            "registro": self.__registro,
+        }  

@@ -18,6 +18,9 @@ class ControladorUnidadControl:
             raise ValueError("La unidad de control ya existe,")
         self.__unidad_control: UnidadControl = UnidadControl()
 
+    def obtener_unidad_control(self) -> UnidadControl:
+        return self.__unidad_control
+
     def obtener_nombres_codop(self) -> set[str]:
         self.__inicializar_info_codops()
         nombres_codops: set = set({info["nombre"] for info in self.__info_codops})

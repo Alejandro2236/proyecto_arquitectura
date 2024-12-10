@@ -13,6 +13,9 @@ class ControladorMemoriaDatos():
             raise ValueError("La memoria de datos ya existe.")
         self.__memoria_datos: MemoriaDatos = MemoriaDatos(capacidad)
 
+    def obtener_memoria_datos(self) -> MemoriaDatos:
+        return self.__memoria_datos
+
     def obtener_siguiente_posicion_libre(self) -> int:
         self.__validar_memoria_datos()
         siguiente_posicion_libre = self.__memoria_datos.siguiente_posicion_libre

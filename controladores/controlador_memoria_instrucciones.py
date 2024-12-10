@@ -13,6 +13,9 @@ class ControladorMemoriaInstrucciones:
             raise ValueError("La memoria de instrucciones ya ha sido creada.")
         self.__memoria_instrucciones: MemoriaInstrucciones = MemoriaInstrucciones(capacidad)
 
+    def obtener_memoria_instrucciones(self) -> MemoriaInstrucciones:
+        return self.__memoria_instrucciones
+
     def obtener_siguiente_posicion_libre(self) -> int:
         self.__validar_memoria_instrucciones()
         siguiente_posicion_libre = self.__memoria_instrucciones.siguiente_posicion_libre

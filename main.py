@@ -39,21 +39,12 @@ mbr = Mbr()
 bus_direcciones = BusDirecciones()
 bus_datos = BusDatos()
 bus_control = BusControl()
-memoria_instrucciones = MemoriaInstrucciones(128)
-memoria_datos = MemoriaDatos(128)
-controlador_unidad_control = ControladorUnidadControl()
-controlador_unidad_control.crear_unidad_control()
-validador = ValidadorSintaxis(controlador_unidad_control)
-controlador_memoria_datos = ControladorMemoriaDatos()
-controlador_memoria_datos.crear_memoria_datos(32)
 controlador_memoria_instrucciones = ControladorMemoriaInstrucciones()
-controlador_memoria_instrucciones.crear_memoria_instrucciones(32)
-traductor_instrucciones = TraductorInstrucciones(
-            controlador_unidad_control,
-            controlador_memoria_datos,
-            controlador_memoria_instrucciones
-        )
-
+controlador_memoria_instrucciones.crear_memoria_instrucciones(128)
+memoria_instrucciones = controlador_memoria_instrucciones.obtener_memoria_instrucciones()
+controlador_memoria_datos = ControladorMemoriaDatos()
+controlador_memoria_datos.crear_memoria_datos(128)
+memoria_datos = controlador_memoria_datos.obtener_memoria_datos()
 
 mar.bus_direcciones = bus_direcciones
 mbr.bus_datos = bus_datos
@@ -66,7 +57,9 @@ memoria_datos.bus_control = bus_control
 memoria_datos.bus_direcciones = bus_direcciones
 memoria_datos.bus_datos = bus_datos
 
-unidad_control = UnidadControl()
+controlador_unidad_control = ControladorUnidadControl()
+controlador_unidad_control.crear_unidad_control()
+unidad_control = controlador_unidad_control.obtener_unidad_control()
 unidad_control_cableada = UnidadControlCableada(
     pc,
     mar,
@@ -80,6 +73,13 @@ unidad_control_cableada = UnidadControlCableada(
     psw,
     alu
 )
+
+validador = ValidadorSintaxis(controlador_unidad_control)
+traductor_instrucciones = TraductorInstrucciones(
+            controlador_unidad_control,
+            controlador_memoria_datos,
+            controlador_memoria_instrucciones
+        )
 
 monitor.add_model("ALU", alu)
 monitor.add_model("PSW", psw)
@@ -102,16 +102,14 @@ thread = Thread(target=start_monitoring)
 thread.daemon = True
 thread.start()
 
-lista= []
-
 with open("programa.txt", "r") as archivo:
-    for dato in archivo:
-        lista.append(dato)
+    lineas = archivo.read()
+lineas = lineas.split("\n")
+print(lineas)
+validador_programa = ValidadorSintaxis(controlador_unidad_control)
 
-verificar_programa = ValidadorSintaxis(controlador_unidad_control)
-
-if verificar_programa.validar_programa(lista):
-    print(traductor_instrucciones.traducir_programa(lista))
+if validador_programa.validar_programa(lineas):
+    print(traductor_instrucciones.traducir_programa(lineas))
 
 
 

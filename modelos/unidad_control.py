@@ -93,16 +93,6 @@ class UnidadControl:
     def estado_actual(self):
         raise AttributeError("Elemento no accesible.")
 
-    @estado_actual.setter
-    def estado_actual(self, nuevo_estado):
-        match nuevo_estado:
-            case EstadoCicloInstruccion.FI:
-                self.__estado_actual = nuevo_estado
-                self.__fetch_instruction()
-            case EstadoCicloInstruccion.DI:
-                self.__estado_actual = nuevo_estado
-                self.__decode_instruction()
-
     @property
     def instruccion_actual(self):
         return self.__instruccion_actual
@@ -147,6 +137,19 @@ class UnidadControl:
     def estado_siguiente_a_di(self):
         return self.__estado_siguiente_a_di
 
+    @estado_actual.setter
+    def estado_actual(self, nuevo_estado):
+        match nuevo_estado:
+            case EstadoCicloInstruccion.FI:
+                self.__estado_actual = nuevo_estado
+                self.__fetch_instruction()
+            case EstadoCicloInstruccion.DI:
+                self.__estado_actual = nuevo_estado
+                self.__decode_instruction()
+            case EstadoCicloInstruccion.CO:
+                self.__estado_actual = nuevo_estado
+                self.__calculate_operand()
+
     def asignar_unidad_control_cableada(self, unidad_control_cableada):
         self.__unidad_control_cableada = unidad_control_cableada
 
@@ -156,6 +159,9 @@ class UnidadControl:
             return
         if self.__estado_actual == EstadoCicloInstruccion.FI:
             self.estado_actual = EstadoCicloInstruccion.DI
+            return
+        if self.__estado_actual == EstadoCicloInstruccion.DI:
+            self.__estado_actual = self.__estado_siguiente_a_di
             return
 
     def __fetch_instruction(self):
@@ -233,7 +239,8 @@ class UnidadControl:
 
     def __decodificar_operando_diferente_a_1(self, codigo_direccionamiento: str):
         direccionamiento_operando = self.__obtener_tipo_direccionamiento(codigo_direccionamiento)
-        if (self.__necesita_calcular_direccion(direccionamiento_operando)):
+        if self.__necesita_calcular_direccion(direccionamiento_operando):
+
             if self.__estado_actual == EstadoCicloInstruccion.CO:
                 return
             self.__estado_siguiente_a_di = EstadoCicloInstruccion.CO
@@ -243,6 +250,9 @@ class UnidadControl:
     @staticmethod
     def __necesita_calcular_direccion(direccionamiento: str) -> bool:
         return direccionamiento == "directo_datos" or direccionamiento == "registro"
+
+    def __calculate_operand(self):
+        return
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado

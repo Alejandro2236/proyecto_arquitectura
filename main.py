@@ -112,11 +112,6 @@ if validador_programa.validar_programa(lineas):
     print(traductor_instrucciones.traducir_programa(lineas))
 
 
-
-
-
-
-
     
 # Layout de la aplicación
 app.layout = html.Div(
@@ -376,6 +371,11 @@ def update_values(n_intervals):
         values["mbr"],
         values["ir"],
     )
+
+unidad_control.continuar_ciclo_instrucciones()
+unidad_control.continuar_ciclo_instrucciones()
+unidad_control.continuar_ciclo_instrucciones()
+unidad_control.continuar_ciclo_instrucciones()
 
 # Ejecutar la aplicación
 if __name__ == "__main__":

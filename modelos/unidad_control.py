@@ -310,20 +310,44 @@ class UnidadControl:
 
     def __execute_operand(self):
         if self.__operacion_actual == "LOAD":
-            if self.__direccionamiento_operando1 != "registro":
-                raise ValueError("Load solo recibe direccionamiento de registro como primer dato.")
-            if self.__tipo_direccionamineto_operando2 != "directo_datos":
-                raise ValueError("Load solo recibe direccionamiento directo como segundo dato.")
+            self.__load()
+            return
+        if self.__operacion_actual == "STORE":
+            self.__store()
+            return
 
-            self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando2)
-            self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
-            self.__unidad_control_cableada.activar_memoria_datos()
-            registo_mbr = self.__unidad_control_cableada.leer_registro_mbr()
-            self.__unidad_control_cableada.mover_a_registro(
-                registo_mbr,
-                "00",
-                transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
-            )
+    def __load(self):
+        if self.__direccionamiento_operando1 != "registro":
+            raise ValueError("Load solo recibe direccionamiento de registro como primer dato.")
+        if self.__tipo_direccionamineto_operando2 != "directo_datos":
+            raise ValueError("Load solo recibe direccionamiento directo como segundo dato.")
+
+        self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando2)
+        self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+        self.__unidad_control_cableada.activar_memoria_datos()
+        registo_mbr = self.__unidad_control_cableada.leer_registro_mbr()
+        self.__unidad_control_cableada.mover_a_registro(
+            registo_mbr,
+            "00",
+            transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
+        )
+
+    def __store(self):
+        if self.__direccionamiento_operando1 != "directo_datos":
+            raise ValueError("Load solo recibe direccionamiento directo como primer dato.")
+        if self.__tipo_direccionamineto_operando2 != "registro":
+            raise ValueError("Load solo recibe direccionamiento de registro como segundo dato.")
+
+        self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando1)
+        dato_registro = self.__unidad_control_cableada.leer_dato_registro(self.__operando2)
+        self.__unidad_control_cableada.enviar_dato_a_mbr(dato_registro)
+        self.__unidad_control_cableada.enviar_dato("01", "buscontrol", "registro")
+        self.__unidad_control_cableada.activar_memoria_datos()
+        self.__unidad_control_cableada.mover_a_registro(
+            registo_mbr,
+            "00",
+            transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
+        )
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado

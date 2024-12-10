@@ -2,6 +2,11 @@ from dash import Dash, html, dcc, Input, Output
 from threading import Thread
 import time
 
+from controladores.controlador_memoria_datos import ControladorMemoriaDatos
+from controladores.controlador_memoria_instrucciones import ControladorMemoriaInstrucciones
+from controladores.controlador_unidad_control import ControladorUnidadControl
+from ensambladores.traductor_instrucciones import TraductorInstrucciones
+from ensambladores.validador_sintaxis import ValidadorSintaxis
 from modelos.alu import ALU
 from modelos.bus_control import BusControl
 from modelos.bus_datos import BusDatos
@@ -36,6 +41,19 @@ bus_datos = BusDatos()
 bus_control = BusControl()
 memoria_instrucciones = MemoriaInstrucciones(128)
 memoria_datos = MemoriaDatos(128)
+controlador_unidad_control = ControladorUnidadControl()
+controlador_unidad_control.crear_unidad_control()
+validador = ValidadorSintaxis(controlador_unidad_control)
+controlador_memoria_datos = ControladorMemoriaDatos()
+controlador_memoria_datos.crear_memoria_datos(32)
+controlador_memoria_instrucciones = ControladorMemoriaInstrucciones()
+controlador_memoria_instrucciones.crear_memoria_instrucciones(32)
+traductor_instrucciones = TraductorInstrucciones(
+            controlador_unidad_control,
+            controlador_memoria_datos,
+            controlador_memoria_instrucciones
+        )
+
 
 mar.bus_direcciones = bus_direcciones
 mbr.bus_datos = bus_datos
@@ -84,6 +102,24 @@ thread = Thread(target=start_monitoring)
 thread.daemon = True
 thread.start()
 
+lista= []
+
+with open("programa.txt", "r") as archivo:
+    for dato in archivo:
+        lista.append(dato)
+
+verificar_programa = ValidadorSintaxis(controlador_unidad_control)
+
+if verificar_programa.validar_programa(lista):
+    print(traductor_instrucciones.traducir_programa(lista))
+
+
+
+
+
+
+
+    
 # Layout de la aplicación
 app.layout = html.Div(
     className="main-container",

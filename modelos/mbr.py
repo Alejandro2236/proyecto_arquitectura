@@ -19,6 +19,7 @@ class Mbr:
     @registro.setter
     def registro(self, nuevo_valor):
         self.__registro = nuevo_valor
+        self.__bus_datos.registro = nuevo_valor
 
     @property
     def bus_datos(self):

@@ -41,7 +41,7 @@ class ControladorMemoriaInstrucciones:
         raise ValueError("Memoria demasiado llena para recibir instrucciones.")
 
     def escribir_programa_en_memoria(self, programa_traducido: list[str], posicion_inicial: int):
-        for indice, instruccion in programa_traducido:
+        for indice, instruccion in enumerate(programa_traducido):
             self.__memoria_instrucciones.almacenar_dato_en_posicion(instruccion, posicion_inicial + indice)
 
     def __validar_memoria_instrucciones(self):

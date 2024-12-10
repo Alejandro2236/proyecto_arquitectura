@@ -84,8 +84,10 @@ class UnidadControlCableada:
         mbr: Mbr = self.__componentes["mbr"]
         return mbr.registro
 
-    def leer_dato_registro(self):
-        ...
+    def leer_dato_registro(self, numero_registro: int) -> str:
+        banco_registros: BancoRegistros = self.__componentes["bancoregistros"]
+        registro: Registro = banco_registros.obtener_registro(numero_registro)
+        return registro.valor_registro
 
     def to_dict(self):
         return {

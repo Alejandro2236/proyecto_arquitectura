@@ -284,7 +284,8 @@ class UnidadControl:
     def __necesita_calcular_direccion(direccionamiento: str) -> bool:
         return direccionamiento == "directo_datos" or direccionamiento == "registro"
 
-    def __es_salto(self, operacion: str) -> bool:
+    @staticmethod
+    def __es_salto(operacion: str) -> bool:
         return operacion in ("JMP", "JEQ", "JNE", "JLT", "JGT")
 
     def __calculate_operand(self):
@@ -343,11 +344,6 @@ class UnidadControl:
         self.__unidad_control_cableada.enviar_dato_a_mbr(dato_registro)
         self.__unidad_control_cableada.enviar_dato("01", "buscontrol", "registro")
         self.__unidad_control_cableada.activar_memoria_datos()
-        self.__unidad_control_cableada.mover_a_registro(
-            "a",
-            "00",
-            transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
-        )
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado

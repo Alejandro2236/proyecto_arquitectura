@@ -339,12 +339,12 @@ class UnidadControl:
             raise ValueError("Load solo recibe direccionamiento de registro como segundo dato.")
 
         self.__unidad_control_cableada.enviar_direccion_a_mar(self.__operando1)
-        dato_registro = self.__unidad_control_cableada.leer_dato_registro(self.__operando2)
+        dato_registro = self.__unidad_control_cableada.leer_dato_registro(transformador_binario.transformar_complemento_a_dos_en_int(self.__operando2))
         self.__unidad_control_cableada.enviar_dato_a_mbr(dato_registro)
         self.__unidad_control_cableada.enviar_dato("01", "buscontrol", "registro")
         self.__unidad_control_cableada.activar_memoria_datos()
         self.__unidad_control_cableada.mover_a_registro(
-            registo_mbr,
+            "a",
             "00",
             transformador_binario.transformar_complemento_a_dos_en_int(self.__operando1)
         )

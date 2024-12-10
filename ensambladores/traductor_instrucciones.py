@@ -74,6 +74,7 @@ class TraductorInstrucciones:
             programa_traducido.append(instruccion_traducida)
             contador_posicion_instruccion_local += 1
         print(self.__etiquetas_actuales)
+        self.__controlador_memoria_instrucciones.escribir_programa_en_memoria(programa_traducido, posicion_inicial_memoria)
         return programa_traducido
 
     def __traducir_instruccion(self, instruccion: str) -> str:

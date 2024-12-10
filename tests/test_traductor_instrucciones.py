@@ -25,3 +25,4 @@ class TestCaseTraductorInstrucciones(unittest.TestCase):
         )
         print("programa traducido:\n", programa_traducido)
         self.assertIsNotNone(programa_traducido)
+

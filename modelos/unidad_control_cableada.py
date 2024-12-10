@@ -84,6 +84,9 @@ class UnidadControlCableada:
         mbr: Mbr = self.__componentes["mbr"]
         return mbr.registro
 
+    def leer_dato_registro(self):
+        ...
+
     def to_dict(self):
         return {
             "estado_actual"

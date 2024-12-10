@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from modelos.memoria_datos import MemoriaDatos
+
 if TYPE_CHECKING:
     from modelos.mar import Mar
     from modelos.mbr import Mbr
@@ -65,3 +67,7 @@ class UnidadControlCableada:
     def activar_memoria_instrucciones(self):
         memoria_instrucciones: MemoriaInstrucciones = self.__componentes["memoriainstrucciones"]
         memoria_instrucciones.ejecutar_indicacion_control()
+
+    def activar_memoria_datos(self):
+        memoria_datos: MemoriaDatos = self.__componentes["memoriadatos"]
+        memoria_datos.ejecutar_indicacion_control()

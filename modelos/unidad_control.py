@@ -67,6 +67,7 @@ class UnidadControl:
         self.__tipo_operando3: str = ""
         self.__tipo_direccionamineto_operando3: str = ""
         self.__estado_siguiente_a_di: Optional[EstadoCicloInstruccion] = None
+        self.__estado_siguiente_a_fo: Optional[EstadoCicloInstruccion] = None
 
     @property
     def codops(self):
@@ -125,6 +126,10 @@ class UnidadControl:
     def operando2(self):
         return self.__operando2
 
+    @operando2.setter
+    def operando2(self, value):
+        self.__operando2 = value
+
     @property
     def tipo_operando2(self):
         return self.__tipo_operando2
@@ -132,6 +137,10 @@ class UnidadControl:
     @property
     def operando3(self):
         return self.__operando3
+
+    @operando3.setter
+    def operando3(self, value):
+        self.__operando3 = value
 
     @property
     def tipo_operando3(self):
@@ -268,14 +277,23 @@ class UnidadControl:
     def __calculate_operand(self):
         if self.__operando2 == "":
             self.__direccion_operando2 = self.__instruccion_actual[23:33]
+            return
         if self.__operando3 == "":
             self.__direccion_operando3 = self.__instruccion_actual[37:47]
 
     def __fetch_operand(self):
-        self.__unidad_control_cableada.enviar_dato("a", "registro", "registro")
-        self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
-        self.__unidad_control_cableada.activar_memoria_instrucciones()
-        self.__unidad_control_cableada.mover_valor("mbr", "ir", "registro", "registro")
+        if self.__operando2 == "":
+            self.__unidad_control_cableada.enviar_dato(self.__direccion_operando2, "mar", "registro")
+            self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+            self.__unidad_control_cableada.activar_memoria_datos()
+            self.__unidad_control_cableada.mover_valor("mbr", "unidadcontrol", "registro", "operando2")
+            if self.__operando3 == "":
+                self.__estado_siguiente_a_fo = EstadoCicloInstruccion.CO
+        if self.__operando3 == "":
+            self.__unidad_control_cableada.enviar_dato(self.__direccion_operando3, "mar", "registro")
+            self.__unidad_control_cableada.enviar_dato("00", "buscontrol", "registro")
+            self.__unidad_control_cableada.activar_memoria_datos()
+            self.__unidad_control_cableada.mover_valor("mbr", "unidadcontrol", "registro", "operando3")
 
     def asignar_estado_para_tests(self, estado: EstadoCicloInstruccion):
         self.__estado_actual = estado
